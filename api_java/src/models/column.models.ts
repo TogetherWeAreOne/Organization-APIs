@@ -2,7 +2,7 @@ import {
     Column,
     CreateDateColumn,
     DeleteDateColumn,
-    Entity, JoinColumn,
+    Entity,
     ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
@@ -30,7 +30,7 @@ export class Columns implements ColumnProps {
     @OneToMany(() => Task, tasks => tasks.column, {cascade: true})
     tasks: Task[];
 
-    @ManyToOne(() => Project, project => project.column, { onDelete: 'CASCADE'})
+    @ManyToOne(() => Project, project => project.column, {onDelete: 'CASCADE'})
     project: Project;
 
     @ManyToOne(() => User, user => user.columns, {onDelete: 'CASCADE'})

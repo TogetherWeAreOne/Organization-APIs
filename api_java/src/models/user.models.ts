@@ -52,25 +52,25 @@ export class User implements UserProps {
     @Column({type: "varchar", nullable: false})
     image!: string;
 
-    @OneToMany(() => ProjectParticipant, projectParticipant => projectParticipant.user,{cascade: true})
+    @OneToMany(() => ProjectParticipant, projectParticipant => projectParticipant.user, {cascade: true})
     projectParticipant: ProjectParticipant[];
 
-    @OneToMany(() => Checklist, checklist => checklist.user,{cascade: true})
+    @OneToMany(() => Checklist, checklist => checklist.user, {cascade: true})
     checklist: Checklist[];
 
-    @OneToMany(() => Columns, columns => columns.user,{cascade: true})
+    @OneToMany(() => Columns, columns => columns.user, {cascade: true})
     columns: Columns[];
 
-    @OneToMany(() => Option, option => option.user,{cascade: true})
+    @OneToMany(() => Option, option => option.user, {cascade: true})
     option: Option[];
 
-    @OneToMany(() => Sticker, sticker => sticker.user,{cascade: true})
+    @OneToMany(() => Sticker, sticker => sticker.user, {cascade: true})
     sticker: Sticker[];
 
-    @OneToMany(() => Task, task => task.user,{cascade: true})
+    @OneToMany(() => Task, task => task.user, {cascade: true})
     task: Task[];
 
-    @OneToMany(() => Project, project => project.user,{cascade: true})
+    @OneToMany(() => Project, project => project.user, {cascade: true})
     project: Project[];
 
     @CreateDateColumn()

@@ -46,7 +46,7 @@ export class ProjectManagerController {
     public async getProjectById(id: string): Promise<Project> {
         return this.projectRepository.createQueryBuilder("project")
             .leftJoinAndSelect("project.user", "projectUser")
-            .where("project.id = :id", { id: id })
+            .where("project.id = :id", {id: id})
             .getOne();
     }
 

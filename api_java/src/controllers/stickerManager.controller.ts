@@ -1,6 +1,5 @@
 import {getRepository, Repository} from "typeorm";
 import {Sticker, StickerProps} from "../models/sticker.models";
-import {Task} from "../models/task.models";
 
 export class StickerManagerController {
 
@@ -36,7 +35,7 @@ export class StickerManagerController {
     public async getStickerById(id: string): Promise<Sticker> {
         return this.stickerRepository.createQueryBuilder("sticker")
             .leftJoinAndSelect("sticker.user", "stickerUser")
-            .where("sticker.id = :id", { id: id })
+            .where("sticker.id = :id", {id: id})
             .getOne();
     }
 

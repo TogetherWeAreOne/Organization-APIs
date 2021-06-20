@@ -2,7 +2,6 @@ import express from "express";
 import {ensureLoggedIn} from "../middlewares/auth.middleware";
 import {TaskManagerController} from "../controllers/taskManager.controller";
 import {ChecklistManagerController} from "../controllers/checklistManager.controller";
-import {taskManagerRouter} from "./taskManager.route";
 import {OptionManagerController} from "../controllers/optionManager.controller";
 import {roleVerificationBeforeDeleteComponent} from "../middlewares/roleManager.middleware";
 import {User} from "../models/user.models";
@@ -14,7 +13,11 @@ checklistManagerRouter.post("/column/task/:taskId/checklist/create", ensureLogge
     const checklistManagerController = await ChecklistManagerController.getInstance();
     const task = await taskManagerController.getTaskById(req.params.taskId);
     try {
-        const checklist = await checklistManagerController.createChecklist({...req.body, task: task, user : req.user as User});
+        const checklist = await checklistManagerController.createChecklist({
+            ...req.body,
+            task: task,
+            user: req.user as User
+        });
         res.status(201).json(checklist);
     } catch (err) {
         res.status(409).send(err).end();
@@ -39,10 +42,11 @@ checklistManagerRouter.put("/checklist/:checklistId/update", ensureLoggedIn, asy
 checklistManagerRouter.get("/column/task/checklist/:checklistId/get/allOptions", ensureLoggedIn, async function (req, res) {
     const checklistId = req.params.checklistId;
     const optionManagerController = await OptionManagerController.getInstance();
-    if (checklistId === undefined){
+    if (checklistId === undefined) {
         res.status(400);
         return;
-    } try {
+    }
+    try {
         const checklists = await optionManagerController.getAllOptionByChecklist(checklistId);
         res.status(202).json(checklists);
     } catch (err) {

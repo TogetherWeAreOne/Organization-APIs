@@ -12,6 +12,13 @@ export class ProjectParticipantManagerController {
         this.projectParticipant = getRepository(ProjectParticipant);
     }
 
+    public static async getInstance(): Promise<ProjectParticipantManagerController> {
+        if (ProjectParticipantManagerController.instance === undefined) {
+            ProjectParticipantManagerController.instance = new ProjectParticipantManagerController();
+        }
+        return ProjectParticipantManagerController.instance;
+    }
+
     public async addOwnerToProject(props: ProjectParticipantProps): Promise<ProjectParticipant> {
         const projectParticipant = this.projectParticipant.create({
             ...props
@@ -30,20 +37,13 @@ export class ProjectParticipantManagerController {
         return projectParticipant;
     }
 
-    public static async getInstance(): Promise<ProjectParticipantManagerController> {
-        if (ProjectParticipantManagerController.instance === undefined) {
-            ProjectParticipantManagerController.instance = new ProjectParticipantManagerController();
-        }
-        return ProjectParticipantManagerController.instance;
-    }
-
     public async getRegistrationByUserAndProject(userId: string, projectId: string): Promise<ProjectParticipant> {
         return this.projectParticipant.findOne({
-            where: {
-                user: userId,
-                project : projectId
+                where: {
+                    user: userId,
+                    project: projectId
+                }
             }
-        }
         );
     }
 }

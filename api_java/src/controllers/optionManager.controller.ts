@@ -24,7 +24,7 @@ export class OptionManagerController {
     public async createOption(props: OptionsProps): Promise<Option> {
         const option = this.optionRepository.create({
             ...props,
-            state : "NOT_STARTED"
+            state: "NOT_STARTED"
         });
         await this.optionRepository.save(option);
 
@@ -39,12 +39,12 @@ export class OptionManagerController {
     public async getOptionById(id: string): Promise<Option> {
         return this.optionRepository.createQueryBuilder("option")
             .leftJoinAndSelect("option.user", "optionUser")
-            .where("option.id = :id", { id: id })
+            .where("option.id = :id", {id: id})
             .getOne();
     }
 
     public async getAllOptionByChecklist(id): Promise<Option[]> {
-        return this.optionRepository.find({where : {checklist : id}});
+        return this.optionRepository.find({where: {checklist: id}});
     }
 
     public async deleteOptionById(id: string) {

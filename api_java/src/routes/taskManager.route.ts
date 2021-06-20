@@ -2,11 +2,7 @@ import express from "express";
 import {ensureLoggedIn} from "../middlewares/auth.middleware";
 import {ColumnManagerController} from "../controllers/columnManager.controller";
 import {TaskManagerController} from "../controllers/taskManager.controller";
-import {columnManagerRouter} from "./columnManager.route";
-import {checklistManagerRouter} from "./checklistManager.route";
 import {ChecklistManagerController} from "../controllers/checklistManager.controller";
-import {ProjectManagerController} from "../controllers/projectManager.controller";
-import {projectManagerRouter} from "./projectManager.route";
 import {roleVerificationBeforeDeleteComponent} from "../middlewares/roleManager.middleware";
 import {User} from "../models/user.models";
 
@@ -17,7 +13,7 @@ taskManagerRouter.post("/column/:columnId/task/create", ensureLoggedIn, async fu
     const columnManagerController = await ColumnManagerController.getInstance();
     const column = await columnManagerController.getColumnById(req.params.columnId);
     try {
-        const task = await taskManagerController.createTask({...req.body, column: column, user : req.user as User});
+        const task = await taskManagerController.createTask({...req.body, column: column, user: req.user as User});
         res.status(201).json(task);
     } catch (err) {
         res.status(409).send(err).end();
@@ -43,10 +39,11 @@ taskManagerRouter.put("/task/:taskId/update", ensureLoggedIn, async function (re
 taskManagerRouter.get("/column/task/:taskId/get/allChecklist", ensureLoggedIn, async function (req, res) {
     const taskId = req.params.taskId;
     const checklistManagerController = await ChecklistManagerController.getInstance();
-    if (taskId === undefined){
+    if (taskId === undefined) {
         res.status(400);
         return;
-    } try {
+    }
+    try {
         const checklists = await checklistManagerController.getAllChecklistByTask(taskId);
         res.status(202).json(checklists);
     } catch (err) {

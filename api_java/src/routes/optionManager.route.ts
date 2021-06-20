@@ -2,7 +2,6 @@ import express from "express";
 import {ensureLoggedIn} from "../middlewares/auth.middleware";
 import {ChecklistManagerController} from "../controllers/checklistManager.controller";
 import {OptionManagerController} from "../controllers/optionManager.controller";
-import {checklistManagerRouter} from "./checklistManager.route";
 import {roleVerificationBeforeDeleteComponent} from "../middlewares/roleManager.middleware";
 import {User} from "../models/user.models";
 
@@ -13,7 +12,11 @@ optionManagerRouter.post("/column/task/checklist/:checklistId/option/create", en
     const optionManagerController = await OptionManagerController.getInstance();
     const checklist = await checklistManagerController.getChecklistById(req.params.checklistId);
     try {
-        const option = await optionManagerController.createOption({...req.body, checklist: checklist, user : req.user as User});
+        await optionManagerController.createOption({
+            ...req.body,
+            checklist: checklist,
+            user: req.user as User
+        });
         res.status(201).json(checklist);
     } catch (err) {
         res.status(409).send(err).end();

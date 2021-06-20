@@ -50,16 +50,16 @@ export class Task implements TaskProps {
     @Column({type: "enum", enum: StateEnum, nullable: false})
     state!: string;
 
-    @OneToMany(() => Checklist, cheklist => cheklist.task,{cascade: true})
+    @OneToMany(() => Checklist, cheklist => cheklist.task, {cascade: true})
     checklist: Checklist[];
 
-    @ManyToOne(() => Columns, columns => columns.tasks, { onDelete: 'CASCADE'})
+    @ManyToOne(() => Columns, columns => columns.tasks, {onDelete: 'CASCADE'})
     column: Columns;
 
-    @OneToMany(() => TaskHasSticker, taskHasStickerT => taskHasStickerT.task, { onDelete: 'CASCADE'})
+    @OneToMany(() => TaskHasSticker, taskHasStickerT => taskHasStickerT.task, {onDelete: 'CASCADE'})
     taskHasStickerT: TaskHasSticker[];
 
-    @ManyToOne(() => User, user => user.task, { onDelete: 'CASCADE'})
+    @ManyToOne(() => User, user => user.task, {onDelete: 'CASCADE'})
     user: User;
 
     @CreateDateColumn()

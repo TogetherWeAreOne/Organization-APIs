@@ -1,9 +1,6 @@
 import express from "express";
 import {ensureLoggedIn} from "../middlewares/auth.middleware";
 import {StickerManagerController} from "../controllers/stickerManager.controller";
-import {taskManagerRouter} from "./taskManager.route";
-import {OptionManagerController} from "../controllers/optionManager.controller";
-import {optionManagerRouter} from "./optionManager.route";
 import {roleVerificationBeforeDeleteComponent} from "../middlewares/roleManager.middleware";
 import {User} from "../models/user.models";
 
@@ -12,7 +9,7 @@ const stickerManagerRouter = express.Router();
 stickerManagerRouter.post("/:projectId/sticker/create", ensureLoggedIn, async function (req, res) {
     const stickerManagerController = await StickerManagerController.getInstance();
     try {
-        const sticker = await stickerManagerController.createSticker({...req.body, user : req.user as User});
+        const sticker = await stickerManagerController.createSticker({...req.body, user: req.user as User});
         res.status(201).json(sticker);
     } catch (err) {
         res.status(409).send(err).end();

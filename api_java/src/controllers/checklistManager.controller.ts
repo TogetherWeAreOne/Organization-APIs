@@ -24,8 +24,8 @@ export class ChecklistManagerController {
     public async createChecklist(props: ChecklistProps): Promise<Checklist> {
         const checklist = this.checklistRepository.create({
             ...props,
-            state : "NOT_STARTED",
-            percentage : 0
+            state: "NOT_STARTED",
+            percentage: 0
         });
         await this.checklistRepository.save(checklist);
 
@@ -40,12 +40,12 @@ export class ChecklistManagerController {
     public async getChecklistById(id: string): Promise<Checklist> {
         return this.checklistRepository.createQueryBuilder("checklist")
             .leftJoinAndSelect("checklist.user", "checklistUser")
-            .where("checklist.id = :id", { id: id })
+            .where("checklist.id = :id", {id: id})
             .getOne();
     }
 
     public async getAllChecklistByTask(id): Promise<Checklist[]> {
-        return this.checklistRepository.find({where : {task : id}});
+        return this.checklistRepository.find({where: {task: id}});
     }
 
     public async deleteChecklistById(id: string) {

@@ -2,7 +2,6 @@ import express from "express";
 import {ensureLoggedIn} from "../middlewares/auth.middleware";
 import {ColumnManagerController} from "../controllers/columnManager.controller";
 import {ProjectManagerController} from "../controllers/projectManager.controller";
-import {projectManagerRouter} from "./projectManager.route";
 import {TaskManagerController} from "../controllers/taskManager.controller";
 import {roleVerificationBeforeDeleteComponent} from "../middlewares/roleManager.middleware";
 import {User} from "../models/user.models";
@@ -14,7 +13,11 @@ columnManagerRouter.post("/:projectId/column/create", ensureLoggedIn, async func
     const projectManagerController = await ProjectManagerController.getInstance();
     const project = await projectManagerController.getProjectById(req.params.projectId);
     try {
-        const column = await columnManagerController.createColumn({...req.body, project: project, user : req.user as User});
+        const column = await columnManagerController.createColumn({
+            ...req.body,
+            project: project,
+            user: req.user as User
+        });
         res.status(201).json(column);
     } catch (err) {
         res.status(409).send(err).end();
@@ -39,10 +42,11 @@ columnManagerRouter.put("/column/:columnId/update", ensureLoggedIn, async functi
 columnManagerRouter.get("/column/:columnId/get/allTask", ensureLoggedIn, async function (req, res) {
     const columnId = req.params.columnId;
     const taskManagerController = await TaskManagerController.getInstance();
-    if (columnId === undefined){
+    if (columnId === undefined) {
         res.status(400);
         return;
-    } try {
+    }
+    try {
         const tasks = await taskManagerController.getAllTaskByColumn(columnId);
         res.status(202).json(tasks);
     } catch (err) {

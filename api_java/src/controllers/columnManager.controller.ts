@@ -39,12 +39,12 @@ export class ColumnManagerController {
     public async getColumnById(id: string): Promise<Columns> {
         return this.columnsRepository.createQueryBuilder("columns")
             .leftJoinAndSelect("columns.user", "columnUser")
-            .where("columns.id = :id", { id: id })
+            .where("columns.id = :id", {id: id})
             .getOne();
     }
 
     public async getAllColumnByProject(id): Promise<Columns[]> {
-        return this.columnsRepository.find({where : {project : id}});
+        return this.columnsRepository.find({where: {project: id}});
     }
 
     public async deleteColumnById(id: string) {

@@ -34,10 +34,10 @@ export class Option implements OptionsProps {
     @Column({type: "enum", enum: StateEnum, nullable: false})
     state!: string;
 
-    @ManyToOne(() => Checklist, checklist => checklist.options, { onDelete: 'CASCADE'})
+    @ManyToOne(() => Checklist, checklist => checklist.options, {onDelete: 'CASCADE'})
     checklist: Checklist;
 
-    @ManyToOne(() => User, user => user.option, { onDelete: 'CASCADE'})
+    @ManyToOne(() => User, user => user.option, {onDelete: 'CASCADE'})
     user: User;
 
     @CreateDateColumn()

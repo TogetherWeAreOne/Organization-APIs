@@ -41,13 +41,13 @@ export class Checklist implements ChecklistProps {
     @Column({type: "enum", enum: StateEnum, nullable: false})
     state!: string;
 
-    @OneToMany(() => Option, option => option.checklist,{cascade: true})
+    @OneToMany(() => Option, option => option.checklist, {cascade: true})
     options: Option[];
 
-    @ManyToOne(() => Task, task => task.checklist, { onDelete: 'CASCADE'})
+    @ManyToOne(() => Task, task => task.checklist, {onDelete: 'CASCADE'})
     task: Task;
 
-    @ManyToOne(() => User, user => user.checklist, { onDelete: 'CASCADE'})
+    @ManyToOne(() => User, user => user.checklist, {onDelete: 'CASCADE'})
     user: User;
 
     @CreateDateColumn()

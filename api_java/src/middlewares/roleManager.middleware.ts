@@ -13,9 +13,8 @@ import {Columns} from "../models/column.models";
 import {Sticker} from "../models/sticker.models";
 import {Task} from "../models/task.models";
 import {Project} from "../models/project.models";
-import {response} from "express";
 
-export function roleVerificationBeforeDeleteComponent(componentType: string) : (req, res, next) => void {
+export function roleVerificationBeforeDeleteComponent(componentType: string): (req, res, next) => void {
     return async function (req, res, next) {
         const userId = (req.user as User).id;
         const projectId = req.params.projectId;
@@ -25,13 +24,13 @@ export function roleVerificationBeforeDeleteComponent(componentType: string) : (
             res.status(401).end();
             return;
         }
-        if (!await doComponentExist(componentType, componentId)){
+        if (!await doComponentExist(componentType, componentId)) {
             console.log("le component existe pas  !!!! ");
             res.status(401).end();
             return;
         }
-        if (!await isUserCreator(userId,componentType,componentId)){
-            if(!await isUserOwner(userId,projectId)){
+        if (!await isUserCreator(userId, componentType, componentId)) {
+            if (!await isUserOwner(userId, projectId)) {
                 console.log("Vous ne pouvez pas supprimer ce composant !!!! ");
                 res.status(401).end();
                 return;
@@ -41,65 +40,65 @@ export function roleVerificationBeforeDeleteComponent(componentType: string) : (
     }
 }
 
-async function isUserCreator(userId, type, componentId): Promise<boolean>{
+async function isUserCreator(userId, type, componentId): Promise<boolean> {
     let componentFind;
-    if (type == 'checklist'){
+    if (type == 'checklist') {
         const controller = await ChecklistManagerController.getInstance();
         componentFind = await controller.getChecklistById(componentId);
-        return (componentFind === undefined ? false :(componentFind as Checklist).user.id === userId);
-    } else if (type == 'option'){
+        return (componentFind === undefined ? false : (componentFind as Checklist).user.id === userId);
+    } else if (type == 'option') {
         const controller = await OptionManagerController.getInstance();
         componentFind = await controller.getOptionById(componentId);
-        return (componentFind === undefined ? false :(componentFind as Option).user.id === userId);
-    } else if (type == 'column'){
+        return (componentFind === undefined ? false : (componentFind as Option).user.id === userId);
+    } else if (type == 'column') {
         const controller = await ColumnManagerController.getInstance();
         componentFind = await controller.getColumnById(componentId);
-        return (componentFind === undefined ? false :(componentFind as Columns).user.id === userId);
-    } else if (type == 'sticker'){
+        return (componentFind === undefined ? false : (componentFind as Columns).user.id === userId);
+    } else if (type == 'sticker') {
         const controller = await StickerManagerController.getInstance();
         componentFind = await controller.getStickerById(componentId);
-        return (componentFind === undefined ? false :(componentFind as Sticker).user.id === userId);
-    } else if (type == 'task'){
+        return (componentFind === undefined ? false : (componentFind as Sticker).user.id === userId);
+    } else if (type == 'task') {
         const controller = await TaskManagerController.getInstance();
         componentFind = await controller.getTaskById(componentId);
-        return (componentFind === undefined ? false :(componentFind as Task).user.id === userId);
-    } else if (type == 'project'){
+        return (componentFind === undefined ? false : (componentFind as Task).user.id === userId);
+    } else if (type == 'project') {
         const controller = await ProjectManagerController.getInstance();
         componentFind = await controller.getProjectById(componentId);
-        return (componentFind === undefined ? false :(componentFind as Project).user.id === userId);
+        return (componentFind === undefined ? false : (componentFind as Project).user.id === userId);
     }
 }
 
-async function doComponentExist(type, componentId): Promise<boolean>{
+async function doComponentExist(type, componentId): Promise<boolean> {
     let componentFind;
-    if (type === 'checklist'){
+    if (type === 'checklist') {
         const controller = await ChecklistManagerController.getInstance();
         componentFind = await controller.getChecklistById(componentId);
         return (componentFind !== undefined);
-    } else if (type === 'option'){
+    } else if (type === 'option') {
         const controller = await OptionManagerController.getInstance();
         componentFind = await controller.getOptionById(componentId);
         return (componentFind !== undefined);
-    } else if (type === 'column'){
+    } else if (type === 'column') {
         const controller = await ColumnManagerController.getInstance();
         componentFind = await controller.getColumnById(componentId);
         return (componentFind !== undefined);
-    } else if (type === 'sticker'){
+    } else if (type === 'sticker') {
         const controller = await StickerManagerController.getInstance();
         componentFind = await controller.getStickerById(componentId);
         return (componentFind !== undefined);
-    } else if (type === 'task'){
+    } else if (type === 'task') {
         const controller = await TaskManagerController.getInstance();
         componentFind = await controller.getTaskById(componentId);
         return (componentFind !== undefined);
-    } else if (type === 'project'){
+    } else if (type === 'project') {
         const controller = await ProjectManagerController.getInstance();
         componentFind = await controller.getProjectById(componentId);
         return (componentFind !== undefined);
     }
 }
 
-async function isUserOwner(userId, projectId): Promise<boolean>{
+async function isUserOwner(userId, projectId): Promise<boolean> {
     const projectParticipantController = await ProjectParticipantManagerController.getInstance();
     const userFind = await projectParticipantController.getRegistrationByUserAndProject(userId, projectId);
 

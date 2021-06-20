@@ -36,7 +36,7 @@ export class Project implements ProjectProps {
     @OneToMany(() => ProjectParticipant, projectParticipant => projectParticipant.project, {cascade: true})
     projectParticipant: ProjectParticipant[];
 
-    @ManyToOne(() => User, user => user.project, { onDelete: 'CASCADE'} )
+    @ManyToOne(() => User, user => user.project, {onDelete: 'CASCADE'})
     user: User;
 
     @CreateDateColumn()

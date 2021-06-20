@@ -24,7 +24,7 @@ export class TaskManagerController {
     public async createTask(props: TaskProps): Promise<Task> {
         const task = this.taskRepository.create({
             ...props,
-            state : "NOT_STARTED"
+            state: "NOT_STARTED"
         });
         await this.taskRepository.save(task);
 
@@ -39,12 +39,12 @@ export class TaskManagerController {
     public async getTaskById(id: string): Promise<Task> {
         return this.taskRepository.createQueryBuilder("task")
             .leftJoinAndSelect("task.user", "taskUser")
-            .where("task.id = :id", { id: id })
+            .where("task.id = :id", {id: id})
             .getOne();
     }
 
     public async getAllTaskByColumn(id): Promise<Task[]> {
-        return this.taskRepository.find({where : {column : id}});
+        return this.taskRepository.find({where: {column: id}});
     }
 
     public async deleteTaskById(id: string) {
