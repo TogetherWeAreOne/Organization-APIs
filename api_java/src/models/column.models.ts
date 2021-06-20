@@ -2,7 +2,7 @@ import {
     Column,
     CreateDateColumn,
     DeleteDateColumn,
-    Entity,
+    Entity, JoinColumn,
     ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
@@ -10,11 +10,13 @@ import {
 } from "typeorm";
 import {Project} from "./project.models";
 import {Task} from "./task.models";
+import {User} from "./user.models";
 
 
 export interface ColumnProps {
     title: string;
     project: Project;
+    user: User;
 }
 
 @Entity()
@@ -25,11 +27,14 @@ export class Columns implements ColumnProps {
     @Column({type: "varchar", length: 255, unique: true, nullable: false})
     title!: string;
 
-    @OneToMany(() => Task, tasks => tasks.column)
+    @OneToMany(() => Task, tasks => tasks.column, {cascade: true})
     tasks: Task[];
 
-    @ManyToOne(() => Project, project => project.column)
+    @ManyToOne(() => Project, project => project.column, { onDelete: 'CASCADE'})
     project: Project;
+
+    @ManyToOne(() => User, user => user.columns, {onDelete: 'CASCADE'})
+    user: User;
 
     @CreateDateColumn()
     createdAt!: Date;

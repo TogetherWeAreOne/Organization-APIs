@@ -1,5 +1,6 @@
 import {getRepository, Repository} from "typeorm";
 import {Sticker, StickerProps} from "../models/sticker.models";
+import {Task} from "../models/task.models";
 
 export class StickerManagerController {
 
@@ -33,7 +34,18 @@ export class StickerManagerController {
     }
 
     public async getStickerById(id: string): Promise<Sticker> {
-        return this.stickerRepository.findOneOrFail(id);
+        return this.stickerRepository.createQueryBuilder("sticker")
+            .leftJoinAndSelect("sticker.user", "stickerUser")
+            .where("sticker.id = :id", { id: id })
+            .getOne();
+    }
+
+    public async getAllStickers(): Promise<Sticker[]> {
+        return this.stickerRepository.find();
+    }
+
+    public async deleteStickerById(id: string) {
+        await this.stickerRepository.softDelete(id);
     }
 
 }

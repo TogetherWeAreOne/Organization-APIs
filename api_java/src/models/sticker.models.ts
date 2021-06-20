@@ -2,12 +2,13 @@ import {
     Column,
     CreateDateColumn,
     DeleteDateColumn,
-    Entity,
+    Entity, ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from "typeorm";
 import {TaskHasSticker} from "./task_has_sticker.models";
+import {User} from "./user.models";
 
 
 export interface StickerProps {
@@ -26,8 +27,11 @@ export class Sticker implements StickerProps {
     @Column({type: "varchar", length: 255, unique: true, nullable: false})
     color!: string;
 
-    @OneToMany(() => TaskHasSticker, taskHasSticker => taskHasSticker.sticker)
-    taskHasSticker: TaskHasSticker[];
+    @OneToMany(() => TaskHasSticker, taskHasStickerS => taskHasStickerS.sticker,{cascade: true})
+    taskHasStickerS: TaskHasSticker[];
+
+    @ManyToOne(() => User, user => user.sticker, { onDelete: 'CASCADE'})
+    user: User;
 
     @CreateDateColumn()
     createdAt!: Date;

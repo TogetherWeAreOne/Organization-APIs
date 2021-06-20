@@ -8,11 +8,19 @@ import {
     UpdateDateColumn
 } from "typeorm";
 import {Checklist} from "./checklist.models";
+import {User} from "./user.models";
 
 
 export interface OptionsProps {
     title: string;
+    state: string;
     checklist: Checklist;
+}
+
+enum StateEnum {
+    IN_PROGRESS = "IN_PROGRESS",
+    FINISHED = "FINISHED",
+    NOT_STARTED = "NOT_STARTED"
 }
 
 @Entity()
@@ -23,8 +31,14 @@ export class Option implements OptionsProps {
     @Column({type: "varchar", length: 255, unique: true, nullable: false})
     title!: string;
 
-    @ManyToOne(() => Checklist, checklist => checklist.options)
+    @Column({type: "enum", enum: StateEnum, nullable: false})
+    state!: string;
+
+    @ManyToOne(() => Checklist, checklist => checklist.options, { onDelete: 'CASCADE'})
     checklist: Checklist;
+
+    @ManyToOne(() => User, user => user.option, { onDelete: 'CASCADE'})
+    user: User;
 
     @CreateDateColumn()
     createdAt!: Date;

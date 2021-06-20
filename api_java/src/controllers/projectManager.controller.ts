@@ -1,7 +1,7 @@
 import {User} from "../models/user.models";
 import {getRepository, Repository} from "typeorm";
 import {Project, ProjectProps} from "../models/project.models";
-import {ProjectParticipant, ProjectParticipantProps} from "../models/projectParticipant";
+import {ProjectParticipant} from "../models/projectParticipant";
 
 
 export class ProjectManagerController {
@@ -34,15 +34,6 @@ export class ProjectManagerController {
         return project;
     }
 
-    public async addUserToProject(props: ProjectParticipantProps): Promise<ProjectParticipant> {
-        const projectParticipant = this.projectParticipant.create({
-            ...props
-        });
-        await this.projectParticipant.save(projectParticipant);
-
-        return projectParticipant;
-    }
-
     public async updateProject(id: string, props: ProjectProps) {
         const result = await this.projectRepository.update(id, props);
         return !(result.affected === undefined || result.affected <= 0);
@@ -53,7 +44,18 @@ export class ProjectManagerController {
     }
 
     public async getProjectById(id: string): Promise<Project> {
-        return this.projectRepository.findOneOrFail(id);
+        return this.projectRepository.createQueryBuilder("project")
+            .leftJoinAndSelect("project.user", "projectUser")
+            .where("project.id = :id", { id: id })
+            .getOne();
+    }
+
+    public async getAllProject(): Promise<Project[]> {
+        return this.projectRepository.find();
+    }
+
+    public async deleteProjectById(id: string) {
+        await this.projectRepository.softDelete(id);
     }
 
 }

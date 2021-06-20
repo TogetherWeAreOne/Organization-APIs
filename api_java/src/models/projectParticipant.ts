@@ -5,21 +5,31 @@ import {Project} from "./project.models";
 
 export interface ProjectParticipantProps {
     pseudo: string;
+    role: string;
     user: User;
     project: Project;
+}
+
+enum RoleEnum {
+    GUEST = "GUEST",
+    OWNER = "OWNER",
+    EDITOR = "EDITOR"
 }
 
 @Entity()
 export class ProjectParticipant implements ProjectParticipantProps {
 
-    @ManyToOne(() => User, user => user.projectParticipant, {primary: true})
+    @ManyToOne(() => User, user => user.projectParticipant, {primary: true, onDelete: 'CASCADE'})
     user: User;
 
-    @ManyToOne(() => Project, project => project.projectParticipant, {primary: true})
+    @ManyToOne(() => Project, project => project.projectParticipant, {primary: true, onDelete: 'CASCADE'})
     project: Project;
 
     @Column({type: "varchar", length: 255, nullable: false})
     pseudo!: string;
+
+    @Column({type: "enum", enum: RoleEnum, nullable: false})
+    role!: string;
 
     @CreateDateColumn()
     createdAt!: Date;

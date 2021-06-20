@@ -9,6 +9,11 @@ import {
 } from "typeorm";
 import {Project} from "./project.models";
 import {ProjectParticipant} from "./projectParticipant";
+import {Checklist} from "./checklist.models";
+import {Columns} from "./column.models";
+import {Option} from "./option.models";
+import {Sticker} from "./sticker.models";
+import {Task} from "./task.models";
 
 
 export interface UserProps {
@@ -47,10 +52,25 @@ export class User implements UserProps {
     @Column({type: "varchar", nullable: false})
     image!: string;
 
-    @OneToMany(() => ProjectParticipant, projectParticipant => projectParticipant.user)
+    @OneToMany(() => ProjectParticipant, projectParticipant => projectParticipant.user,{cascade: true})
     projectParticipant: ProjectParticipant[];
 
-    @OneToMany(() => Project, project => project.user)
+    @OneToMany(() => Checklist, checklist => checklist.user,{cascade: true})
+    checklist: Checklist[];
+
+    @OneToMany(() => Columns, columns => columns.user,{cascade: true})
+    columns: Columns[];
+
+    @OneToMany(() => Option, option => option.user,{cascade: true})
+    option: Option[];
+
+    @OneToMany(() => Sticker, sticker => sticker.user,{cascade: true})
+    sticker: Sticker[];
+
+    @OneToMany(() => Task, task => task.user,{cascade: true})
+    task: Task[];
+
+    @OneToMany(() => Project, project => project.user,{cascade: true})
     project: Project[];
 
     @CreateDateColumn()

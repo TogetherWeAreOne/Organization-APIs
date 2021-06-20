@@ -30,13 +30,13 @@ export class Project implements ProjectProps {
     @Column({type: "varchar", length: 255, nullable: false})
     description!: string;
 
-    @OneToMany(() => Columns, columns => columns.project)
+    @OneToMany(() => Columns, columns => columns.project, {cascade: true})
     column: Columns[];
 
-    @OneToMany(() => ProjectParticipant, projectParticipant => projectParticipant.project)
+    @OneToMany(() => ProjectParticipant, projectParticipant => projectParticipant.project, {cascade: true})
     projectParticipant: ProjectParticipant[];
 
-    @ManyToOne(() => User, user => user.project)
+    @ManyToOne(() => User, user => user.project, { onDelete: 'CASCADE'} )
     user: User;
 
     @CreateDateColumn()

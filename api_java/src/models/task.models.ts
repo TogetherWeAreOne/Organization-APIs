@@ -11,11 +11,13 @@ import {
 import {Columns} from "./column.models";
 import {Checklist} from "./checklist.models";
 import {TaskHasSticker} from "./task_has_sticker.models";
+import {User} from "./user.models";
 
 export interface TaskProps {
     title: string;
     description: string;
     priority: string;
+    state: string;
     column: Columns;
 }
 
@@ -23,6 +25,12 @@ enum PriorityEnum {
     HIGH = "HIGH",
     MEDIUM = "MEDIUM",
     LOW = "low"
+}
+
+enum StateEnum {
+    IN_PROGRESS = "IN_PROGRESS",
+    FINISHED = "FINISHED",
+    NOT_STARTED = "NOT_STARTED"
 }
 
 @Entity()
@@ -39,14 +47,20 @@ export class Task implements TaskProps {
     @Column({type: "enum", enum: PriorityEnum, nullable: false})
     priority!: string;
 
-    @OneToMany(() => Checklist, cheklist => cheklist.task)
+    @Column({type: "enum", enum: StateEnum, nullable: false})
+    state!: string;
+
+    @OneToMany(() => Checklist, cheklist => cheklist.task,{cascade: true})
     checklist: Checklist[];
 
-    @ManyToOne(() => Columns, columns => columns.tasks)
+    @ManyToOne(() => Columns, columns => columns.tasks, { onDelete: 'CASCADE'})
     column: Columns;
 
-    @ManyToOne(() => TaskHasSticker, taskHasSticker => taskHasSticker.task)
-    taskHasSticker: TaskHasSticker;
+    @OneToMany(() => TaskHasSticker, taskHasStickerT => taskHasStickerT.task, { onDelete: 'CASCADE'})
+    taskHasStickerT: TaskHasSticker[];
+
+    @ManyToOne(() => User, user => user.task, { onDelete: 'CASCADE'})
+    user: User;
 
     @CreateDateColumn()
     createdAt!: Date;

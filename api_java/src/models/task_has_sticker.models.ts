@@ -11,10 +11,10 @@ export interface TaskHasStickerProps {
 @Entity()
 export class TaskHasSticker implements TaskHasStickerProps {
 
-    @ManyToOne(() => Sticker, sticker => sticker.taskHasSticker, {primary: true})
+    @ManyToOne(() => Sticker, sticker => sticker.taskHasStickerS, {primary: true, onDelete: 'CASCADE'})
     sticker: Sticker;
 
-    @ManyToOne(() => Task, task => task.taskHasSticker, {primary: true})
+    @ManyToOne(() => Task, task => task.taskHasStickerT, {primary: true, onDelete: 'CASCADE'})
     task: Task;
 
     @CreateDateColumn()
