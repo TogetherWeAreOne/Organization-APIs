@@ -54,6 +54,13 @@ export class ProjectManagerController {
         return this.projectRepository.find();
     }
 
+    public async getAllProjectForUser(id: string): Promise<Project[]> {
+        return this.projectRepository.createQueryBuilder("project")
+            .leftJoinAndSelect("project.user", "projectUser")
+            .where("project.user = :id", {id: id})
+            .getMany();
+    }
+
     public async deleteProjectById(id: string) {
         await this.projectRepository.softDelete(id);
     }
