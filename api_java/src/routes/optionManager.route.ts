@@ -7,7 +7,7 @@ import {User} from "../models/user.models";
 
 const optionManagerRouter = express.Router();
 
-optionManagerRouter.post("/column/task/checklist/:checklistId/option/create", ensureLoggedIn, async function (req, res) {
+optionManagerRouter.post("/create/:checklistId", ensureLoggedIn, async function (req, res) {
     const checklistManagerController = await ChecklistManagerController.getInstance();
     const optionManagerController = await OptionManagerController.getInstance();
     const checklist = await checklistManagerController.getChecklistById(req.params.checklistId);
@@ -23,7 +23,7 @@ optionManagerRouter.post("/column/task/checklist/:checklistId/option/create", en
     }
 });
 
-optionManagerRouter.put("/option/:optionId/update", ensureLoggedIn, async function (req, res) {
+optionManagerRouter.put("/update/:optionId", ensureLoggedIn, async function (req, res) {
     const optionId = req.params.optionId;
     const optionManagerController = await OptionManagerController.getInstance();
     if (optionId === undefined) {
@@ -38,12 +38,11 @@ optionManagerRouter.put("/option/:optionId/update", ensureLoggedIn, async functi
     }
 });
 
-optionManagerRouter.delete('/:projectId/column/task/checklist/option/:component/delete', roleVerificationBeforeDeleteComponent("option"), async function (req, res) {
-    const optionId = req.params.component;
+optionManagerRouter.delete('/delete/:optionId/:projectId', roleVerificationBeforeDeleteComponent("option"), async function (req, res) {
+    const optionId = req.params.optionId;
     const optionManagerController = await OptionManagerController.getInstance();
     try {
         await optionManagerController.deleteOptionById(optionId);
-        console.log("l'option a bien été supprimé");
         res.status(200).end();
     } catch (err) {
         res.status(400).send(err).end();

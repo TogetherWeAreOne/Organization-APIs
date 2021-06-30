@@ -6,7 +6,7 @@ import {User} from "../models/user.models";
 
 const stickerManagerRouter = express.Router();
 
-stickerManagerRouter.post("/:projectId/sticker/create", ensureLoggedIn, async function (req, res) {
+stickerManagerRouter.post("/create/:projectId", ensureLoggedIn, async function (req, res) {
     const stickerManagerController = await StickerManagerController.getInstance();
     try {
         const sticker = await stickerManagerController.createSticker({...req.body, user: req.user as User});
@@ -16,7 +16,7 @@ stickerManagerRouter.post("/:projectId/sticker/create", ensureLoggedIn, async fu
     }
 });
 
-stickerManagerRouter.put("/sticker/:stickerId/update", ensureLoggedIn, async function (req, res) {
+stickerManagerRouter.put("/update/:stickerId", ensureLoggedIn, async function (req, res) {
     const stickerId = req.params.stickerId;
     const stickerManagerController = await StickerManagerController.getInstance();
     if (stickerId === undefined) {
@@ -31,7 +31,7 @@ stickerManagerRouter.put("/sticker/:stickerId/update", ensureLoggedIn, async fun
     }
 });
 
-stickerManagerRouter.get("/sticker/get/all", ensureLoggedIn, async function (req, res) {
+stickerManagerRouter.get("/all", ensureLoggedIn, async function (req, res) {
     const stickerManagerController = await StickerManagerController.getInstance();
     try {
         const stickers = await stickerManagerController.getAllStickers();
@@ -41,12 +41,11 @@ stickerManagerRouter.get("/sticker/get/all", ensureLoggedIn, async function (req
     }
 })
 
-stickerManagerRouter.delete('/:projectId/sticker/:component/delete', roleVerificationBeforeDeleteComponent("sticker"), async function (req, res) {
-    const stickerId = req.params.component;
+stickerManagerRouter.delete('/delete/:stickerId/:projectId', roleVerificationBeforeDeleteComponent("sticker"), async function (req, res) {
+    const stickerId = req.params.stickerId;
     const stickerManagerController = await StickerManagerController.getInstance();
     try {
         await stickerManagerController.deleteStickerById(stickerId);
-        console.log("le sticker a bien été supprimé");
         res.status(200).end();
     } catch (err) {
         res.status(400).send(err).end();

@@ -7,7 +7,7 @@ import {AuthController} from "../controllers/auth.controller";
 const authRouter = express.Router();
 
 
-authRouter.post("/signin", ensureLoggedOut, async function (req, res) {
+authRouter.post("/signup", ensureLoggedOut, async function (req, res) {
     const authController = await AuthController.getInstance();
     try {
         const user = await authController.subscribe({...req.body});

@@ -8,7 +8,7 @@ import {User} from "../models/user.models";
 
 const checklistManagerRouter = express.Router();
 
-checklistManagerRouter.post("/column/task/:taskId/checklist/create", ensureLoggedIn, async function (req, res) {
+checklistManagerRouter.post("/create/:taskId", ensureLoggedIn, async function (req, res) {
     const taskManagerController = await TaskManagerController.getInstance();
     const checklistManagerController = await ChecklistManagerController.getInstance();
     const task = await taskManagerController.getTaskById(req.params.taskId);
@@ -24,7 +24,7 @@ checklistManagerRouter.post("/column/task/:taskId/checklist/create", ensureLogge
     }
 });
 
-checklistManagerRouter.put("/checklist/:checklistId/update", ensureLoggedIn, async function (req, res) {
+checklistManagerRouter.put("/update/:checklistId", ensureLoggedIn, async function (req, res) {
     const checklistId = req.params.checklistId;
     const taskManagerController = await ChecklistManagerController.getInstance();
     if (checklistId === undefined) {
@@ -39,7 +39,7 @@ checklistManagerRouter.put("/checklist/:checklistId/update", ensureLoggedIn, asy
     }
 });
 
-checklistManagerRouter.get("/column/task/checklist/:checklistId/get/allOptions", ensureLoggedIn, async function (req, res) {
+checklistManagerRouter.get("/allOptions/:checklistId", ensureLoggedIn, async function (req, res) {
     const checklistId = req.params.checklistId;
     const optionManagerController = await OptionManagerController.getInstance();
     if (checklistId === undefined) {
@@ -54,12 +54,11 @@ checklistManagerRouter.get("/column/task/checklist/:checklistId/get/allOptions",
     }
 })
 
-checklistManagerRouter.delete('/:projectId/column/task/checklist/:component/delete', roleVerificationBeforeDeleteComponent("checklist"), async function (req, res) {
-    const checklistId = req.params.component;
+checklistManagerRouter.delete('/delete/:checklistId/:projectId', roleVerificationBeforeDeleteComponent("checklist"), async function (req, res) {
+    const checklistId = req.params.checklistId;
     const checklistManagerController = await ChecklistManagerController.getInstance();
     try {
         await checklistManagerController.deleteChecklistById(checklistId);
-        console.log("la checklist a bien été supprimé");
         res.status(200).end();
     } catch (err) {
         res.status(400).send(err).end();

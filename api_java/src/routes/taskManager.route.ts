@@ -8,7 +8,7 @@ import {User} from "../models/user.models";
 
 const taskManagerRouter = express.Router();
 
-taskManagerRouter.post("/column/:columnId/task/create", ensureLoggedIn, async function (req, res) {
+taskManagerRouter.post("/create/:columnId", ensureLoggedIn, async function (req, res) {
     const taskManagerController = await TaskManagerController.getInstance();
     const columnManagerController = await ColumnManagerController.getInstance();
     const column = await columnManagerController.getColumnById(req.params.columnId);
@@ -20,7 +20,7 @@ taskManagerRouter.post("/column/:columnId/task/create", ensureLoggedIn, async fu
     }
 });
 
-taskManagerRouter.put("/task/:taskId/update", ensureLoggedIn, async function (req, res) {
+taskManagerRouter.put("/update/:taskId", ensureLoggedIn, async function (req, res) {
     const taskId = req.params.taskId;
     console.log(taskId);
     const taskManagerController = await TaskManagerController.getInstance();
@@ -36,7 +36,7 @@ taskManagerRouter.put("/task/:taskId/update", ensureLoggedIn, async function (re
     }
 });
 
-taskManagerRouter.get("/column/task/:taskId/get/allChecklist", ensureLoggedIn, async function (req, res) {
+taskManagerRouter.get("/allChecklists/:taskId", ensureLoggedIn, async function (req, res) {
     const taskId = req.params.taskId;
     const checklistManagerController = await ChecklistManagerController.getInstance();
     if (taskId === undefined) {
@@ -51,12 +51,11 @@ taskManagerRouter.get("/column/task/:taskId/get/allChecklist", ensureLoggedIn, a
     }
 })
 
-taskManagerRouter.delete('/:projectId/column/task/:component/delete', roleVerificationBeforeDeleteComponent("task"), async function (req, res) {
-    const taskId = req.params.component;
+taskManagerRouter.delete('/delete/:taskId/:projectId', roleVerificationBeforeDeleteComponent("task"), async function (req, res) {
+    const taskId = req.params.taskId;
     const taskManagerController = await TaskManagerController.getInstance();
     try {
         await taskManagerController.deleteTaskById(taskId);
-        console.log("la tache a bien été supprimé");
         res.status(200).end();
     } catch (err) {
         res.status(400).send(err).end();
