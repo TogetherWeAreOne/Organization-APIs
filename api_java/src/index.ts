@@ -1,12 +1,12 @@
 import express, {Express} from "express";
 import {createConnection, getRepository} from "typeorm";
 import {config} from "dotenv";
-import {configure} from "./src/config/passport.config";
+import {configure} from "./config/passport.config";
 import bodyParser from "body-parser";
 import {TypeormStore} from "connect-typeorm";
-import {Session} from "./src/models/session.models";
+import {Session} from "./models/session.models";
 import passport from "passport";
-import {buildRoutes} from "./src/routes/index.route";
+import {buildRoutes} from "./routes/index.route";
 
 config();
 
