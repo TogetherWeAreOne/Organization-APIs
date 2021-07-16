@@ -35,7 +35,10 @@ export class ProjectManagerController {
     }
 
     public async updateProject(id: string, props: ProjectProps) {
-        const result = await this.projectRepository.update(id, props);
+        let entity = new Project()
+        entity.title = props.title;
+        entity.description = props.description;
+        const result = await this.projectRepository.update(id, entity);
         return !(result.affected === undefined || result.affected <= 0);
     }
 

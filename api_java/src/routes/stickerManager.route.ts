@@ -41,8 +41,8 @@ stickerManagerRouter.get("/all", ensureLoggedIn, async function (req, res) {
     }
 })
 
-stickerManagerRouter.delete('/delete/:stickerId/:projectId', roleVerificationBeforeDeleteComponent("sticker"), async function (req, res) {
-    const stickerId = req.params.stickerId;
+stickerManagerRouter.delete('/delete/:component/:projectId', roleVerificationBeforeDeleteComponent("sticker"), async function (req, res) {
+    const stickerId = req.params.component;
     const stickerManagerController = await StickerManagerController.getInstance();
     try {
         await stickerManagerController.deleteStickerById(stickerId);

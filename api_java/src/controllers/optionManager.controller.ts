@@ -32,7 +32,10 @@ export class OptionManagerController {
     }
 
     public async updateOption(id: string, props: OptionsProps) {
-        const result = await this.optionRepository.update(id, props);
+        let entity = new Option()
+        entity.title = props.title;
+        entity.state = props.state;
+        const result = await this.optionRepository.update(id, entity);
         return !(result.affected === undefined || result.affected <= 0);
     }
 

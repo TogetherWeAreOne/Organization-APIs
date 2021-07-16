@@ -54,8 +54,8 @@ checklistManagerRouter.get("/allOptions/:checklistId", ensureLoggedIn, async fun
     }
 })
 
-checklistManagerRouter.delete('/delete/:checklistId/:projectId', roleVerificationBeforeDeleteComponent("checklist"), async function (req, res) {
-    const checklistId = req.params.checklistId;
+checklistManagerRouter.delete('/delete/:component/:projectId', roleVerificationBeforeDeleteComponent("checklist"), async function (req, res) {
+    const checklistId = req.params.component;
     const checklistManagerController = await ChecklistManagerController.getInstance();
     try {
         await checklistManagerController.deleteChecklistById(checklistId);

@@ -32,7 +32,9 @@ export class ColumnManagerController {
     }
 
     public async updateColumn(id: string, props: ColumnProps) {
-        const result = await this.columnsRepository.update(id, props);
+        let entity = new Columns();
+        entity.title = props.title;
+        const result = await this.columnsRepository.update(id, entity);
         return !(result.affected === undefined || result.affected <= 0);
     }
 

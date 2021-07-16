@@ -21,6 +21,7 @@ export interface ColumnProps {
 
 @Entity()
 export class Columns implements ColumnProps {
+
     @PrimaryGeneratedColumn("uuid")
     id!: string;
 

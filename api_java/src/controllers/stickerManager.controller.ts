@@ -28,7 +28,10 @@ export class StickerManagerController {
     }
 
     public async updateSticker(id: string, props: StickerProps) {
-        const result = await this.stickerRepository.update(id, props);
+        let entity = new Sticker()
+        entity.title = props.title;
+        entity.color = props.color;
+        const result = await this.stickerRepository.update(id, entity);
         return !(result.affected === undefined || result.affected <= 0);
     }
 

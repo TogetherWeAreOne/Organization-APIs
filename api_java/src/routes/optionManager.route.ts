@@ -26,6 +26,7 @@ optionManagerRouter.post("/create/:checklistId", ensureLoggedIn, async function 
 optionManagerRouter.put("/update/:optionId", ensureLoggedIn, async function (req, res) {
     const optionId = req.params.optionId;
     const optionManagerController = await OptionManagerController.getInstance();
+
     if (optionId === undefined) {
         res.status(400).end();
         return;
@@ -38,8 +39,8 @@ optionManagerRouter.put("/update/:optionId", ensureLoggedIn, async function (req
     }
 });
 
-optionManagerRouter.delete('/delete/:optionId/:projectId', roleVerificationBeforeDeleteComponent("option"), async function (req, res) {
-    const optionId = req.params.optionId;
+optionManagerRouter.delete('/delete/:component/:projectId', roleVerificationBeforeDeleteComponent("option"), async function (req, res) {
+    const optionId = req.params.component;
     const optionManagerController = await OptionManagerController.getInstance();
     try {
         await optionManagerController.deleteOptionById(optionId);

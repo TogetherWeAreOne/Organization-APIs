@@ -51,8 +51,8 @@ taskManagerRouter.get("/allChecklists/:taskId", ensureLoggedIn, async function (
     }
 })
 
-taskManagerRouter.delete('/delete/:taskId/:projectId', roleVerificationBeforeDeleteComponent("task"), async function (req, res) {
-    const taskId = req.params.taskId;
+taskManagerRouter.delete('/delete/:component/:projectId', roleVerificationBeforeDeleteComponent("task"), async function (req, res) {
+    const taskId = req.params.component;
     const taskManagerController = await TaskManagerController.getInstance();
     try {
         await taskManagerController.deleteTaskById(taskId);
