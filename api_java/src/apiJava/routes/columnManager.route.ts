@@ -8,7 +8,7 @@ import {User} from "../models/user.models";
 
 const columnManagerRouter = express.Router();
 
-columnManagerRouter.post("/:projectId/column/create", ensureLoggedIn, async function (req, res) {
+columnManagerRouter.post("/create/:projectId", ensureLoggedIn, async function (req, res) {
     const columnManagerController = await ColumnManagerController.getInstance();
     const projectManagerController = await ProjectManagerController.getInstance();
     const project = await projectManagerController.getProjectById(req.params.projectId);
@@ -24,22 +24,24 @@ columnManagerRouter.post("/:projectId/column/create", ensureLoggedIn, async func
     }
 });
 
-columnManagerRouter.put("/column/:columnId/update", ensureLoggedIn, async function (req, res) {
-    const columnId = req.params.columnId;
+columnManagerRouter.put("/update/:columnId", ensureLoggedIn, async function (req, res) {
+    const id = req.params.columnId;
     const columnsManagerController = await ColumnManagerController.getInstance();
-    if (columnId === undefined) {
+    if (id === undefined) {
         res.status(400).end();
         return;
     }
     try {
-        await columnsManagerController.updateColumn(columnId, {...req.body});
+        console.info(req);
+        await columnsManagerController.updateColumn(id, {...req.body});
         res.status(204).end();
     } catch (err) {
+        console.info(err);
         res.status(400).send(err).end();
     }
 });
 
-columnManagerRouter.get("/column/:columnId/get/allTask", ensureLoggedIn, async function (req, res) {
+columnManagerRouter.get("/allTasks/:columnId", ensureLoggedIn, async function (req, res) {
     const columnId = req.params.columnId;
     const taskManagerController = await TaskManagerController.getInstance();
     if (columnId === undefined) {
@@ -54,12 +56,11 @@ columnManagerRouter.get("/column/:columnId/get/allTask", ensureLoggedIn, async f
     }
 })
 
-columnManagerRouter.delete('/:projectId/column/:component/delete', roleVerificationBeforeDeleteComponent("column"), async function (req, res) {
+columnManagerRouter.delete('/delete/:component/:projectId', roleVerificationBeforeDeleteComponent("column"), async function (req, res) {
     const columnId = req.params.component;
     const columnManagerController = await ColumnManagerController.getInstance();
     try {
         await columnManagerController.deleteColumnById(columnId);
-        console.log("la colonne a bien été supprimé");
         res.status(200).end();
     } catch (err) {
         res.status(400).send(err).end();

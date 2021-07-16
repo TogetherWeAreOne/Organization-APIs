@@ -2,9 +2,9 @@ import express, {Express} from "express";
 import {createConnection, getRepository} from "typeorm";
 import {config} from "dotenv";
 import bodyParser from "body-parser";
-
 import {buildOrgAppRoutes} from "./src/apiJava/routes/index.route";
 import {buildWebRoutes} from "./src/togetherWeAreOne/routes/index.route";
+
 
 config();
 

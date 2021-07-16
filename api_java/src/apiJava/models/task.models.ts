@@ -50,7 +50,7 @@ export class Task implements TaskProps {
     @Column({type: "enum", enum: StateEnum, nullable: false})
     state!: string;
 
-    @OneToMany(() => Checklist, cheklist => cheklist.task)
+    @OneToMany(() => Checklist, checklist => checklist.task, {cascade: true})
     checklist: Checklist[];
 
     @ManyToOne(() => Columns, columns => columns.tasks, {onDelete: 'CASCADE', nullable: false})

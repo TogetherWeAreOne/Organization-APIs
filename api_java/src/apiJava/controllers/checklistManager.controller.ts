@@ -33,7 +33,11 @@ export class ChecklistManagerController {
     }
 
     public async updateChecklist(id: string, props: ChecklistProps) {
-        const result = await this.checklistRepository.update(id, props);
+        let entity = new Checklist()
+        entity.title = props.title;
+        entity.percentage = props.percentage;
+        entity.state = props.state;
+        const result = await this.checklistRepository.update(id, entity);
         return !(result.affected === undefined || result.affected <= 0);
     }
 

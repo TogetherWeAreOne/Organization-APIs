@@ -35,7 +35,10 @@ export class ProjectManagerController {
     }
 
     public async updateProject(id: string, props: ProjectProps) {
-        const result = await this.projectRepository.update(id, props);
+        let entity = new Project()
+        entity.title = props.title;
+        entity.description = props.description;
+        const result = await this.projectRepository.update(id, entity);
         return !(result.affected === undefined || result.affected <= 0);
     }
 
@@ -53,6 +56,13 @@ export class ProjectManagerController {
 
     public async getAllProject(): Promise<Project[]> {
         return this.projectRepository.find();
+    }
+
+    public async getAllProjectForUser(id: string): Promise<Project[]> {
+        return this.projectRepository.createQueryBuilder("project")
+            .leftJoinAndSelect("project.user", "projectUser")
+            .where("project.user = :id", {id: id})
+            .getMany();
     }
 
     public async deleteProjectById(id: string) {

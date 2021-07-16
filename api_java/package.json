@@ -2,10 +2,11 @@
   "name": "application-java",
   "version": "1.0.0",
   "description": "",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "scripts": {
-    "start": "ts-node index.ts",
-    "build": "tsc index.ts"
+    "start": "ts-node src/index.ts",
+    "dev": "nodemon --watch src/**/*.ts --exec ts-node src/index.ts",
+    "build": "tsc src/index.ts"
   },
   "repository": {
     "type": "git",
@@ -22,7 +23,7 @@
     "bcrypt": "^5.0.1",
     "connect-typeorm": "^1.1.4",
     "cookie-parser": "^1.4.5",
-    "dotenv": "^8.2.0",
+    "dotenv": "^8.6.0",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "mysql2": "^2.2.5",

@@ -32,7 +32,12 @@ export class TaskManagerController {
     }
 
     public async updateTask(id: string, props: TaskProps) {
-        const result = await this.taskRepository.update(id, props);
+        let entity = new Task()
+        entity.title = props.title;
+        entity.description = props.description;
+        entity.priority = props.priority;
+        entity.state = props.state;
+        const result = await this.taskRepository.update(id, entity);
         return !(result.affected === undefined || result.affected <= 0);
     }
 

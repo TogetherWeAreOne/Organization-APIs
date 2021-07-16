@@ -30,11 +30,11 @@ export function buildOrgAppRoutes() {
     router.use(passport.session());
     router.use("/auth", authRouter);
     router.use("/project", projectManagerRouter);
-    router.use("/project", columnManagerRouter);
-    router.use("/project", taskManagerRouter);
-    router.use("/project", checklistManagerRouter);
-    router.use("/project", optionManagerRouter);
-    router.use("/project", stickerManagerRouter);
+    router.use("/column", columnManagerRouter);
+    router.use("/task", taskManagerRouter);
+    router.use("/checklist", checklistManagerRouter);
+    router.use("/option", optionManagerRouter);
+    router.use("/sticker", stickerManagerRouter);
 
     return router;
 }

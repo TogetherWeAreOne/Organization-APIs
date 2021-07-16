@@ -96,9 +96,7 @@ projectManagerRouter.put("/join/:accessCodeId", ensureLoggedIn, async function (
     }
 });
 
-
-
-projectManagerRouter.get("/:projectId/get/allColumn", ensureLoggedIn, async function (req, res) {
+projectManagerRouter.get("/allColumns/:projectId", ensureLoggedIn, async function (req, res) {
     const projectId = req.params.projectId;
     const columnManager = await ColumnManagerController.getInstance();
     if (projectId === undefined) {
@@ -113,7 +111,18 @@ projectManagerRouter.get("/:projectId/get/allColumn", ensureLoggedIn, async func
     }
 })
 
-projectManagerRouter.get("/get/all", ensureLoggedIn, async function (req, res) {
+projectManagerRouter.get("/all/:userId", ensureLoggedIn, async function (req, res) {
+    const userId = req.params.userId;
+    const projectManagerController = await ProjectManagerController.getInstance();
+    try {
+        const projects = await projectManagerController.getAllProjectForUser(userId);
+        res.status(202).json(projects);
+    } catch (err) {
+        res.status(400).send(err).end();
+    }
+})
+
+projectManagerRouter.get("/all", ensureLoggedIn, async function (req, res) {
     const projectManagerController = await ProjectManagerController.getInstance();
     try {
         const projects = await projectManagerController.getAllProject();
@@ -123,13 +132,11 @@ projectManagerRouter.get("/get/all", ensureLoggedIn, async function (req, res) {
     }
 })
 
-
-projectManagerRouter.delete('/:projectId/delete', roleVerificationBeforeDeleteComponent("project"), async function (req, res) {
+projectManagerRouter.delete('/delete/:projectId', roleVerificationBeforeDeleteComponent("project"), async function (req, res) {
     const projectId = req.params.projectId;
     const projectManagerController = await ProjectManagerController.getInstance();
     try {
         await projectManagerController.deleteProjectById(projectId);
-        console.log("le projet a bien été supprimé");
         res.status(200).end();
     } catch (err) {
         res.status(400).send(err).end();
