@@ -1,12 +1,10 @@
 import express, {Express} from "express";
 import {createConnection, getRepository} from "typeorm";
 import {config} from "dotenv";
-import {configure} from "./src/config/passport.config";
 import bodyParser from "body-parser";
-import {TypeormStore} from "connect-typeorm";
-import {Session} from "./src/models/session.models";
-import passport from "passport";
-import {buildRoutes} from "./src/routes/index.route";
+
+import {buildOrgAppRoutes} from "./src/apiJava/routes/index.route";
+import {buildWebRoutes} from "./src/togetherWeAreOne/routes/index.route";
 
 config();
 
@@ -23,26 +21,13 @@ createConnection({
     synchronize: true,
     logging: true
 }).then(connection => {
-    configure();
     const app: Express = express();
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: false}));
     app.use(require('cookie-parser')());
-    app.use("/", require('express-session')({
-        secret: process.env.SECRET,
-        resave: true,
-        saveUninitialized: true,
-        store: new TypeormStore({
-            cleanupLimit: 2,
-            limitSubquery: false,
-            ttl: 259200
-        }).connect(getRepository(Session)),
-    }));
-    app.use("/", passport.initialize());
-    app.use("/", passport.session());
-    buildRoutes(app);
+    app.use("/organisation-app", buildOrgAppRoutes());
+    app.use("/TogetherWeAreOne", buildWebRoutes());
     app.listen(port, function () {
         console.log(`Listening on ${port}...`);
     });
-
 }).catch(error => console.log(error));
