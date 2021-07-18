@@ -14,11 +14,21 @@ import {auctionSaleProposalManagerRouter} from "./auctionSaleProposalManager.rou
 import {productProposalManagerRouter} from "./productProposalManager.route";
 import {productCategoryManagerRouter} from "./productCategoryManager.route";
 import {auctionSaleCategoryManagerRouter} from "./auctionSaleCategoryManager.route";
+import {request} from "https";
+
+
 
 
 export function buildWebRoutes() {
     const router = Router();
     configureWeb();
+    //router.use(Cors());
+    router.use(require('cors')({ credentials : true, origin: "http://localhost:4200"}));
+    /*router.use((req, res, next) => {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Origin", "Origin, X-Requested-With, Content-Type, Accept");
+        next();
+    })*/
     router.use("/", require('express-session')({
         secret: process.env.SECRET,
         resave: true,
