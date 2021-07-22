@@ -37,7 +37,7 @@ export class ProductManagerController {
     }
 
     public async getProductById(id: string): Promise<Product> {
-        return this.productRepository.findOne(id)
+        return this.productRepository.findOne(id, {relations: ["category"]})
         /*return this.projectRepository.createQueryBuilder("project")
             .leftJoinAndSelect("project.user", "projectUser")
             .where("project.id = :id", {id: id})
@@ -45,7 +45,7 @@ export class ProductManagerController {
     }
 
     public async getProductByCreator(user: User): Promise<Product[]> {
-        return this.productRepository.find({ creator: user});
+        return this.productRepository.find({where:{ creator: user},relations: ["category"]});
         /*return this.projectRepository.createQueryBuilder("project")
             .leftJoinAndSelect("project.user", "projectUser")
             .where("project.id = :id", {id: id})

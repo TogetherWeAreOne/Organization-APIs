@@ -41,6 +41,21 @@ productCategoryManagerRouter.get("/:productCategoryId/get", ensureLoggedIn, asyn
     }
 });
 
+productCategoryManagerRouter.get("/:productCategoryName/getByName", ensureLoggedIn, async function (req, res){
+    const productCategoryName = req.params.productCategoryName;
+    const productCategoryManagerController = await ProductCategoryManagerController.getInstance();
+    if ( productCategoryName === undefined ) {
+        res.status(400).json("le product category id n'est pas renseigné !").end();
+        return;
+    }
+    try {
+        const productCategory = await productCategoryManagerController.getProductCategoryByName( productCategoryName );
+        res.status(201).json( productCategory );
+    } catch ( err ){
+        res.status(400).send( err );
+    }
+});
+
 productCategoryManagerRouter.put("/:productCategoryId/update", ensureLoggedIn, async function (req, res){
     const productCategoryId = req.params.productCategoryId;
     const productCategoryManagerController = await ProductCategoryManagerController.getInstance();
