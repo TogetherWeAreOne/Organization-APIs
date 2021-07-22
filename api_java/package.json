@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TogetherWeAreOne/Organization-Application-JAVA.git"
+    "url": "git+https://github.com/TogetherWeAreOne/Organization-APIs.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/TogetherWeAreOne/Organization-Application-JAVA/issues"
+    "url": "https://github.com/TogetherWeAreOne/Organization-APIs/issues"
   },
-  "homepage": "https://github.com/TogetherWeAreOne/Organization-Application-JAVA#readme",
+  "homepage": "https://github.com/TogetherWeAreOne/Organization-APIs#readme",
   "dependencies": {
     "bcrypt": "^5.0.1",
     "connect-typeorm": "^1.1.4",
