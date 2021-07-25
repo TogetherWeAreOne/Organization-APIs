@@ -1,6 +1,7 @@
 import {CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, UpdateDateColumn} from "typeorm";
 import {Sticker} from "./sticker.models";
 import {Task} from "./task.models";
+import "reflect-metadata";
 
 
 export interface TaskHasStickerProps {

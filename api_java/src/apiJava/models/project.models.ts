@@ -9,6 +9,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from "typeorm";
+import "reflect-metadata";
 import {User} from "./user.models";
 import {Columns} from "./column.models";
 import {ProjectParticipant} from "./projectParticipant";

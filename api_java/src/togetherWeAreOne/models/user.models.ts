@@ -7,6 +7,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from "typeorm";
+import "reflect-metadata";
 import {Event} from "./event.models";
 import {Product} from "./product.models";
 import {AuctionSale} from "./auctionSale.models";

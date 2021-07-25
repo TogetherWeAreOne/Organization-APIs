@@ -1,5 +1,6 @@
 import {ISession} from "connect-typeorm";
 import {Column, Entity, Index, PrimaryColumn} from "typeorm";
+import "reflect-metadata";
 
 
 @Entity({database : "organization_java"})

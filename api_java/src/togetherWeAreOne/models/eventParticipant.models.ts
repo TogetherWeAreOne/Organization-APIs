@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 import {User, UserProps} from "./user.models";
 import {Event} from "./event.models";
+import "reflect-metadata";
 
 
 export interface EventParticipantProps {

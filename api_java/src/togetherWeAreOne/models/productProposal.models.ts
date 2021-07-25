@@ -1,5 +1,5 @@
 import {User} from "./user.models";
-import {AuctionSale} from "./auctionSale.models";
+import "reflect-metadata";
 import {
     Column,
     CreateDateColumn,

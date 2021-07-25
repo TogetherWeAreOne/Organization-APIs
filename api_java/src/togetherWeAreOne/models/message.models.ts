@@ -8,6 +8,7 @@ import {
     UpdateDateColumn
 } from "typeorm";
 import {User, UserProps} from "./user.models";
+import "reflect-metadata";
 
 export interface MessageProps {
     content: string;

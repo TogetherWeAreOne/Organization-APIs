@@ -1,6 +1,7 @@
 import {Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, UpdateDateColumn} from "typeorm";
 import {User} from "./user.models";
 import {Project} from "./project.models";
+import "reflect-metadata";
 
 
 export interface ProjectParticipantProps {

@@ -7,7 +7,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from "typeorm";
-
+import "reflect-metadata";
 import {Project} from "./project.models";
 
 export interface AccessCodeProps {

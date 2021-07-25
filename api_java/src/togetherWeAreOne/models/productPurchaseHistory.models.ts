@@ -1,6 +1,7 @@
 import {User} from "./user.models";
 import {Product} from "./product.models";
 import {Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, UpdateDateColumn} from "typeorm";
+import "reflect-metadata";
 
 export interface ProductPurchaseHistoryProps {
     user: User;

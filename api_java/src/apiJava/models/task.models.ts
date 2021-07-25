@@ -8,6 +8,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from "typeorm";
+import "reflect-metadata";
 import {Columns} from "./column.models";
 import {Checklist} from "./checklist.models";
 import {TaskHasSticker} from "./task_has_sticker.models";

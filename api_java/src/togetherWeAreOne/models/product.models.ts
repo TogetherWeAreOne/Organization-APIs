@@ -8,6 +8,7 @@ import {
     UpdateDateColumn
 } from "typeorm";
 import {User} from "./user.models";
+import "reflect-metadata";
 import {ProductProposal} from "./productProposal.models";
 import {ProductCategory} from "./productCategory.models";
 import {ProductPurchaseHistoryModels} from "./productPurchaseHistory.models";

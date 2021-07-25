@@ -6,7 +6,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from "typeorm";
-
+import "reflect-metadata";
 import {Product} from "./product.models";
 
 export interface ProductCategoryProps {

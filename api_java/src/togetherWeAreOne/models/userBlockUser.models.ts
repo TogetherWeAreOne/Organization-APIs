@@ -1,4 +1,5 @@
 import {User} from "./user.models";
+import "reflect-metadata";
 import {
     Column,
     CreateDateColumn,

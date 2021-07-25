@@ -8,6 +8,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from "typeorm";
+import "reflect-metadata";
 import {Task} from "./task.models";
 import {Option} from "./option.models";
 import {User} from "./user.models";

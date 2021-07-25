@@ -7,7 +7,7 @@ import {
     UpdateDateColumn
 } from "typeorm";
 import {User, UserProps} from "./user.models";
-import {Product} from "./product.models";
+import "reflect-metadata";
 import {AuctionSale} from "./auctionSale.models";
 
 enum AuctionSaleProposalStateEnum {

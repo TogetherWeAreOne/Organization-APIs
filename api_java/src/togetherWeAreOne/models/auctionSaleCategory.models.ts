@@ -7,7 +7,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from "typeorm";
-import {Product} from "./product.models";
+import "reflect-metadata";
 import {AuctionSale} from "./auctionSale.models";
 
 export interface AuctionSaleCategoryProps {
