@@ -23,7 +23,7 @@ export function buildWebRoutes() {
     const router = Router();
     configureWeb();
     //router.use(Cors());
-    router.use(require('cors')({ credentials : true, origin: "http://localhost:4200"}));
+    router.use(require('cors')({ credentials : true, origin: "http://54.37.154.109:80"}));
     /*router.use((req, res, next) => {
         res.header("Access-Control-Allow-Origin", "*");
         res.header("Access-Control-Allow-Origin", "Origin, X-Requested-With, Content-Type, Accept");
