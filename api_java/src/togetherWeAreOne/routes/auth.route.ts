@@ -26,6 +26,10 @@ authRouter.delete('/logout', ensureLoggedIn, async function (req, res) {
     res.status(204).end();
 });
 
+authRouter.get('/test', ensureLoggedOut, async function (req, res) {
+    res.send('<h1>TEST MARCHE</h1>');
+});
+
 
 export {
     authRouter
