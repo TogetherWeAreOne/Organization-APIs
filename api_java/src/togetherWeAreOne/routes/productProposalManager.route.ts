@@ -6,10 +6,11 @@ import {ProductManagerController} from "../controllers/productManager.controller
 import {ProductProposalManagerController} from "../controllers/productProposalManager.controller";
 import {UserManagerController} from "../controllers/userManager.controller";
 import {ProductPurchaseHistoryManagerController} from "../controllers/productPurchaseHistoryManager.controller";
+import {isProductProposalAlreadyExist} from "../middlewares/productProposalControl.middleware";
 
 const productProposalManagerRouter = express.Router();
 
-productProposalManagerRouter.post("/proposal/:productId/create", ensureLoggedIn, async function (req, res){
+productProposalManagerRouter.post("/proposal/:productId/create", ensureLoggedIn,isProductProposalAlreadyExist(), async function (req, res){
     const productId = req.params.productId;
     const productManagerController = await ProductManagerController.getInstance();
     const productProposalManagerController = await ProductProposalManagerController.getInstance();

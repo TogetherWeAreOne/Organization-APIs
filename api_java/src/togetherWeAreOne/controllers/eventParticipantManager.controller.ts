@@ -39,10 +39,10 @@ export class EventParticipantManagerController {
     }
 
     public async getAllEventParticipantByUser(user: User): Promise<EventParticipant[]> {
-        return this.eventParticipantRepository.find({user : user});
+        return this.eventParticipantRepository.find( {where: {user : user},relations: ["event"]});
     }
 
     public async leaveEvent(event: Event, user: User) {
-        await this.eventParticipantRepository.softDelete({event : event, user: user});
+        await this.eventParticipantRepository.delete({event : event, user: user});
     }
 }

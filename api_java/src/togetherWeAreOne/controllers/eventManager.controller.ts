@@ -36,7 +36,7 @@ export class EventManagerController {
     }
 
     public async getEventById(id: string): Promise<Event> {
-        return this.eventRepository.findOneOrFail(id,{relations:["user"]})
+        return this.eventRepository.findOneOrFail(id,{relations:["creator"]})
         /*return this.projectRepository.createQueryBuilder("project")
             .leftJoinAndSelect("project.user", "projectUser")
             .where("project.id = :id", {id: id})

@@ -42,10 +42,10 @@ export class Event implements EventProps {
     @Column({nullable: false})
     description!: string;
 
-    @Column({type: "int", nullable: false})
+    @Column({type: "int", nullable: true})
     maxParticipant!: number;
 
-    @Column({type: "int", nullable: false})
+    @Column({type: "int", nullable: true})
     minParticipant!: number;
 
     @Column({type: "varchar", length: 255, nullable: false})

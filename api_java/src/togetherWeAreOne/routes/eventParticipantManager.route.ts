@@ -3,6 +3,7 @@ import {ensureLoggedIn} from "../middlewares/auth.middleware";
 import {EventManagerController} from "../controllers/eventManager.controller";
 import {EventParticipantManagerController} from "../controllers/eventParticipantManager.controller";
 import {User} from "../models/user.models";
+import {UserManagerController} from "../controllers/userManager.controller";
 
 const eventParticipantManagerRouter = express.Router();
 
@@ -19,6 +20,18 @@ eventParticipantManagerRouter.post("/join/:eventId", ensureLoggedIn, async funct
     }
     try {
         const eventParticipant = await eventParticipantManagerController.addUserToEvent({ user: (req.user as User), event: event, role:"PARTICIPANT"});
+        res.status(201).json( eventParticipant );
+    } catch (err){
+        res.status(400).send(err);
+    }
+})
+
+eventParticipantManagerRouter.get("/getMyEventParticipation", ensureLoggedIn, async function(req, res){
+    const userManagerController = await UserManagerController.getInstance();
+    const user = await userManagerController.getUserById( (req.user as User).id );
+    const eventParticipantManagerController = await EventParticipantManagerController.getInstance();
+    try {
+        const eventParticipant = await eventParticipantManagerController.getAllEventParticipantByUser( user );
         res.status(201).json( eventParticipant );
     } catch (err){
         res.status(400).send(err);

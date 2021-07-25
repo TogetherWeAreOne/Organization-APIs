@@ -2,7 +2,7 @@ import {getRepository, Repository} from "typeorm";
 import {AuctionSaleProposal, AuctionSaleProposalProps} from "../models/auctionSaleProposal.models";
 import {User} from "../models/user.models";
 import {AuctionSale} from "../models/auctionSale.models";
-import {ProductProposal, ProductProposalProps} from "../models/productProposal.models";
+import {ProductProposal, ProductProposalProps, ProductProposalStateEnum} from "../models/productProposal.models";
 import {Product} from "../models/product.models";
 
 export class ProductProposalManagerController {
@@ -52,7 +52,7 @@ export class ProductProposalManagerController {
     }
 
     public async getProductProposalByProduct( product: Product ): Promise<ProductProposal[]> {
-        return this.productProposalRepository.find({ product: product });
+        return this.productProposalRepository.find({where:{ product: product, state : ProductProposalStateEnum.PENDING },relations: ["user", "product"]});
         /*return this.projectRepository.createQueryBuilder("project")
             .leftJoinAndSelect("project.user", "projectUser")
             .where("project.id = :id", {id: id})

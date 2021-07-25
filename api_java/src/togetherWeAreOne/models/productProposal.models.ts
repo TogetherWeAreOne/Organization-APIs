@@ -11,7 +11,7 @@ import {
 } from "typeorm";
 import {Product} from "./product.models";
 
-enum ProductProposalStateEnum {
+export enum ProductProposalStateEnum {
     PENDING = "PENDING",
     REFUSED = "REFUSED",
     ACCEPTED = "ACCEPTED"
