@@ -18,6 +18,7 @@ import {ProductProposal} from "./productProposal.models";
 import {UserBlockedUser} from "./userBlockUser.models";
 import {AuctionSaleWinHistoryModels} from "./auctionSaleWinHistory.models";
 import {ProductPurchaseHistoryModels} from "./productPurchaseHistory.models";
+import {DiscussionMessage} from "./discussionMessage.models";
 
 export interface UserProps {
     email: string;
@@ -100,6 +101,9 @@ export class User implements UserProps {
 
     @OneToMany(() => Message, message => message.sender)
     messageSended: Message[];
+
+    @OneToMany(() => DiscussionMessage, discussionMessage => discussionMessage.user)
+    discussionMessage: DiscussionMessage[];
 
     @OneToMany(() => Message, message => message.receiver)
     messageReceived: Message[];

@@ -1,15 +1,14 @@
 import {getRepository, Repository} from "typeorm";
 import {User} from "../models/user.models";
 import {Message, MessageProps} from "../models/message.models";
+import {DiscussionMessage, DiscussionMessageProps} from "../models/discussionMessage.models";
 
 export class MessageManagerController {
 
     private static instance: MessageManagerController;
-    private userRepository: Repository<User>;
     private messageRepository: Repository<Message>;
 
     private constructor() {
-        this.userRepository = getRepository(User);
         this.messageRepository = getRepository(Message);
     }
 
@@ -21,12 +20,12 @@ export class MessageManagerController {
     }
 
     public async createMessage(props: MessageProps): Promise<Message> {
-        const product = this.messageRepository.create({
+        const message = this.messageRepository.create({
             ...props
         });
-        await this.messageRepository.save(product);
+        await this.messageRepository.save(message);
 
-        return product;
+        return message;
     }
 
     public async updateMessage(id: string, props: MessageProps) {

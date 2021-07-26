@@ -32,6 +32,7 @@ eventParticipantManagerRouter.get("/getMyEventParticipation", ensureLoggedIn, as
     const eventParticipantManagerController = await EventParticipantManagerController.getInstance();
     try {
         const eventParticipant = await eventParticipantManagerController.getAllEventParticipantByUser( user );
+        console.log(eventParticipant);
         res.status(201).json( eventParticipant );
     } catch (err){
         res.status(400).send(err);

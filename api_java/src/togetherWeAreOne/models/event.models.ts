@@ -10,6 +10,7 @@ import {
 import {User, UserProps} from "./user.models";
 import "reflect-metadata";
 import {EventParticipant} from "./eventParticipant.models";
+import {Discussion} from "./discussion.models";
 
 
 export interface EventProps {
@@ -75,6 +76,9 @@ export class Event implements EventProps {
 
     @OneToMany(() => EventParticipant, eventParticipant => eventParticipant.event)
     eventParticipants: EventParticipant[];
+
+    @OneToMany(() => Discussion, discussion => discussion.event)
+    discussion: Discussion[];
 
     @CreateDateColumn()
     createdAt!: Date;

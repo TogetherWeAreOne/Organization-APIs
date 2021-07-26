@@ -19,13 +19,16 @@ export function isUserCertified(req, res, next) {
 }
 
 
-export function isEventCreator(eventId: string) : (req, res, next) => void {
+export function isEventCreator() : (req, res, next) => void {
     return async function (req, res, next) {
+        console.log(" icciiii :::: " + req.params.eventId);
         const userManagerController = await  UserManagerController.getInstance();
         const eventManagerController = await EventManagerController.getInstance();
         const user = await userManagerController.getUserById(req.user.id);
-        const event = await eventManagerController.getEventById(eventId);
-        if (event.creator !== user){
+        const event = await eventManagerController.getEventById(req.params.eventId);
+        console.log( user );
+        console.log( event )
+        if (event.creator.id !== user.id){
             return res.status(401).json("Vous n'etes pas le propriétaire de l'event").end();
         }
         next();

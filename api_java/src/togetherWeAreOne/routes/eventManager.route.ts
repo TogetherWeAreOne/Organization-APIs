@@ -4,6 +4,7 @@ import {EventManagerController} from "../controllers/eventManager.controller";
 import {User} from "../models/user.models";
 import {EventParticipant} from "../models/eventParticipant.models";
 import {EventParticipantManagerController} from "../controllers/eventParticipantManager.controller";
+import {DiscussionManagerController} from "../controllers/discussionManager.controller";
 
 
 const eventManagerRouter = express.Router();
@@ -11,10 +12,12 @@ const eventManagerRouter = express.Router();
 eventManagerRouter.post("/create", ensureLoggedIn, async function (req, res){
     const eventManagerController = await EventManagerController.getInstance();
     const eventParticipantManagerController = await EventParticipantManagerController.getInstance();
+    const discussionManagerController = await  DiscussionManagerController.getInstance();
     try {
-        const event = await  eventManagerController.createEvent({...req.body, creator : (req.user as User)});
+        const event = await eventManagerController.createEvent({...req.body, creator : (req.user as User)});
         const eventParticipant = await eventParticipantManagerController.addUserToEvent({ user: (req.user as User), event: event, role:"CREATOR"});
-        res.status(201).json( event && eventParticipant );
+        const discussion = await discussionManagerController.createDiscussion({ title: event.title, event : event, lastMessageDate : null});
+        res.status(201).json( event && eventParticipant && discussion);
     } catch (err){
         res.status(400).send(err);
     }
