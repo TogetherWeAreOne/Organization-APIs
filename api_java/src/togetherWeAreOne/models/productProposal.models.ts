@@ -54,5 +54,4 @@ export class ProductProposal implements ProductProposalProps {
 
     @DeleteDateColumn()
     deletedAt!: Date;
-
 }

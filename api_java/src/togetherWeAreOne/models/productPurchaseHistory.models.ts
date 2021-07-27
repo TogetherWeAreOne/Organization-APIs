@@ -33,5 +33,4 @@ export class ProductPurchaseHistoryModels implements ProductPurchaseHistoryProps
 
     @DeleteDateColumn()
     deletedAt!: Date;
-
 }

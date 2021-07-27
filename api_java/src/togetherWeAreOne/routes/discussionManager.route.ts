@@ -18,7 +18,7 @@ discussionManagerRouter.post("/:discussionId/send", ensureLoggedIn,isEventCreato
     const discussionManagerController = await DiscussionManagerController.getInstance();
     const discussionMessageManagerController = await DiscussionMessageManagerController.getInstance();
     const discussion = await discussionManagerController.getDiscussionById( discussionId );
-    if ( event === null || event === undefined || discussion === null || discussion === undefined ){
+    if ( discussion === null || discussion === undefined ){
         res.status(400).send("une erreur est survenue").end();
     }
     try {
@@ -83,8 +83,6 @@ discussionManagerRouter.get("/:discussionId/getEvent", ensureLoggedIn, async fun
         res.status(400).send( err );
     }
 });
-
-
 
 discussionManagerRouter.delete("/:discussionMessageId/deleteMessage", ensureLoggedIn, async function(req, res){
     const discussionMessageId = req.params.discussionMessageId;
