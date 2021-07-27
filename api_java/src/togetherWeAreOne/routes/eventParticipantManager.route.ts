@@ -26,6 +26,23 @@ eventParticipantManagerRouter.post("/join/:eventId", ensureLoggedIn, async funct
     }
 })
 
+eventParticipantManagerRouter.get("/:eventId/getParticipant", ensureLoggedIn, async function(req, res){
+    const eventId = req.params.eventId;
+    const eventParticipantManagerController = await EventParticipantManagerController.getInstance();
+    const eventManagerController = await EventManagerController.getInstance();
+    const event = await eventManagerController.getEventById( eventId );
+    if ( event === undefined ) {
+        res.status(400).json("l'event n'existe pas !").end();
+        return;
+    }
+    try {
+        const eventParticipants = await eventParticipantManagerController.getAllEventParticipantByEvent( event );
+        res.status(201).json( eventParticipants );
+    } catch (err){
+        res.status(400).send(err);
+    }
+})
+
 eventParticipantManagerRouter.get("/getMyEventParticipation", ensureLoggedIn, async function(req, res){
     const userManagerController = await UserManagerController.getInstance();
     const user = await userManagerController.getUserById( (req.user as User).id );

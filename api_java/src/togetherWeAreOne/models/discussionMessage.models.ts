@@ -14,6 +14,7 @@ import {Discussion} from "./discussion.models";
 import "reflect-metadata";
 export interface DiscussionMessageProps {
     content: string;
+    date: Date;
     user: User;
     discussion: Discussion;
 }
@@ -25,6 +26,9 @@ export class DiscussionMessage implements DiscussionMessageProps {
 
     @Column({type: "varchar", length: 255, nullable: false})
     content!: string;
+
+    @Column({nullable: true})
+    date!: Date;
 
     @ManyToOne(() => User, user => user.discussionMessage, {onDelete: 'CASCADE', nullable: false})
     user: User;

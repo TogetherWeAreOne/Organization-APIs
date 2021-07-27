@@ -36,9 +36,8 @@ export class DiscussionMessageManagerController {
             .getOne();*/
     }
 
-
     public async getAllDiscussionMessageFromDiscussion(discussion : Discussion): Promise<DiscussionMessage[]> {
-        return this.discussionMessageRepository.find( { discussion : discussion });
+        return this.discussionMessageRepository.find( { where : {discussion : discussion}, order: { date : 'ASC'} });
     }
 
     public async deleteDiscussionMessageById(id: string) {

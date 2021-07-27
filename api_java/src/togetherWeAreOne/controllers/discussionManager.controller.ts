@@ -43,7 +43,7 @@ export class DiscussionManagerController {
     }
 
     public async getDiscussionByEvent(event: Event): Promise<Discussion> {
-        return this.discussionRepository.findOneOrFail({event: event});
+        return this.discussionRepository.findOneOrFail({where : {event: event}, relations : ["event"]});
         /*return this.projectRepository.createQueryBuilder("project")
             .leftJoinAndSelect("project.user", "projectUser")
             .where("project.id = :id", {id: id})

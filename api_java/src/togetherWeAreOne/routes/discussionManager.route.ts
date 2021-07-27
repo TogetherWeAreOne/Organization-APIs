@@ -13,18 +13,17 @@ import {DiscussionProps} from "../models/discussion.models";
 var moment = require('moment');
 const discussionManagerRouter = express.Router();
 
-discussionManagerRouter.post("/:eventId/send", ensureLoggedIn,isEventCreator() , async function (req, res){
-    const eventManagerController = await EventManagerController.getInstance();
+discussionManagerRouter.post("/:discussionId/send", ensureLoggedIn,isEventCreator() , async function (req, res){
+    const discussionId = req.params.discussionId;
     const discussionManagerController = await DiscussionManagerController.getInstance();
     const discussionMessageManagerController = await DiscussionMessageManagerController.getInstance();
-    const event = await eventManagerController.getEventById( req.params.eventId );
-    const discussion = await discussionManagerController.getDiscussionByEvent( event );
+    const discussion = await discussionManagerController.getDiscussionById( discussionId );
     if ( event === null || event === undefined || discussion === null || discussion === undefined ){
         res.status(400).send("une erreur est survenue").end();
     }
     try {
         const message = await discussionMessageManagerController.createDiscussionMessage({ content : req.body.content,
-                                                                                            user :(req.user as User), discussion: discussion  });
+                                                                                            user :(req.user as User), discussion: discussion, date :moment().clone().format('YYYY-MM-DD HH:mm:SS') });
         console.log( discussion.id );
 
         const updateDiscussion = await discussionManagerController.updateDiscussion( discussion.id, {...(discussion as DiscussionProps), lastMessageDate : moment().clone().format('YYYY-MM-DD HH:mm:SS')});
@@ -63,6 +62,23 @@ discussionManagerRouter.get("/:discussionId/getMessages", ensureLoggedIn, async 
     try {
         const messages = await discussionMessageManagerController.getAllDiscussionMessageFromDiscussion( discussion );
         res.status(201).json( messages );
+    } catch ( err ){
+        res.status(400).send( err );
+    }
+});
+
+discussionManagerRouter.get("/:discussionId/getEvent", ensureLoggedIn, async function (req, res){
+    const discussionId = req.params.discussionId;
+    const discussionManagerController = await DiscussionManagerController.getInstance();
+    const eventManagerController = await EventManagerController.getInstance();
+    if ( discussionId === undefined ) {
+        res.status(400).json("la discussion id n'est pas renseigné !").end();
+        return;
+    }
+    const discussion = await discussionManagerController.getDiscussionById( discussionId ) ;
+    try {
+        const event = await eventManagerController.getEventById( discussion.event.id );
+        res.status(201).json( event );
     } catch ( err ){
         res.status(400).send( err );
     }
