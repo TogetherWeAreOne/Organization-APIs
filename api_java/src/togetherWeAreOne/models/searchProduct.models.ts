@@ -4,8 +4,4 @@ export class SearchProduct {
     maxPrice: number;
     negotiable: string;
     category: string[];
-
-    prepareSearch() {
-        this.name = "%"+this.name+"%";
-    }
 }

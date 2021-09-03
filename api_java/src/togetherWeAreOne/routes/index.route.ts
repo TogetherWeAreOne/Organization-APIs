@@ -1,4 +1,4 @@
-import {Express, Router} from "express";
+import express, {Express, Router} from "express";
 import {configureWeb} from "../config/passport.config";
 import {TypeormStore} from "connect-typeorm";
 import {getRepository} from "typeorm";
@@ -16,20 +16,13 @@ import {productCategoryManagerRouter} from "./productCategoryManager.route";
 import {auctionSaleCategoryManagerRouter} from "./auctionSaleCategoryManager.route";
 import {request} from "https";
 import {discussionManagerRouter} from "./discussionManager.route";
-
-
+import {userManagerRouter} from "./userManager.route";
 
 
 export function buildWebRoutes() {
     const router = Router();
     configureWeb();
-    //router.use(Cors());
     router.use(require('cors')({ credentials : true, origin: "http://localhost:4200"}));
-    /*router.use((req, res, next) => {
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Origin", "Origin, X-Requested-With, Content-Type, Accept");
-        next();
-    })*/
     router.use("/", require('express-session')({
         secret: process.env.SECRET,
         resave: true,
@@ -42,8 +35,10 @@ export function buildWebRoutes() {
     }));
     router.use(passport.initialize());
     router.use(passport.session());
+    router.use(express.static('images_uploads',{cacheControl:true,maxAge:259200000}));
 
     router.use("/auth", authRouter);
+    router.use("/user", userManagerRouter);
     router.use("/event", eventManagerRouter);
     router.use("/event", eventParticipantManagerRouter);
     router.use("/product", productManagerRouter);
@@ -54,6 +49,8 @@ export function buildWebRoutes() {
     router.use("/productCategory", productCategoryManagerRouter);
     router.use("/auctionSaleCategory", auctionSaleCategoryManagerRouter);
     router.use("/discussion", discussionManagerRouter);
+
+
 
 
     return router;

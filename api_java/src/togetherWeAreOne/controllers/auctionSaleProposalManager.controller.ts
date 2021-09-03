@@ -35,7 +35,7 @@ export class AuctionSaleProposalManagerController {
     }
 
     public async getAuctionSalesProposalByUserAndByAuctionSale(user: User, auctionSale: AuctionSale ): Promise<AuctionSaleProposal> {
-        return this.auctionSalesProposalRepository.findOneOrFail({user: user, auctionSale: auctionSale},{relations : ["user","auctionSale"]});
+        return this.auctionSalesProposalRepository.findOne({user: user, auctionSale: auctionSale, state : 'PENDING'},{relations : ["user","auctionSale"]});
         /*return this.projectRepository.createQueryBuilder("project")
             .leftJoinAndSelect("project.user", "projectUser")
             .where("project.id = :id", {id: id})

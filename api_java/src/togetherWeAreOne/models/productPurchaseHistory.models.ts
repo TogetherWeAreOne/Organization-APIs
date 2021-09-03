@@ -1,29 +1,40 @@
 import {User} from "./user.models";
 import {Product} from "./product.models";
-import {Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, UpdateDateColumn} from "typeorm";
+import {
+    Column,
+    CreateDateColumn,
+    DeleteDateColumn,
+    Entity,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
+} from "typeorm";
 import "reflect-metadata";
 
 export interface ProductPurchaseHistoryProps {
     user: User;
     product: Product;
     price: number;
-    date: string;
+    date: Date;
 }
 
 @Entity()
-export class ProductPurchaseHistoryModels implements ProductPurchaseHistoryProps {
+export class ProductPurchaseHistory implements ProductPurchaseHistoryProps {
 
-    @ManyToOne(() => User, user => user.productPurchaseHistory, {primary : true, onDelete: 'CASCADE', nullable: false})
+    @PrimaryGeneratedColumn("uuid")
+    id!: string;
+
+    @ManyToOne(() => User, user => user.productPurchaseHistory, { nullable: false})
     user: User;
 
-    @ManyToOne(() => Product, product => product.productPurchaseHistory, {primary : true, onDelete: 'CASCADE', nullable: false})
+    @ManyToOne(() => Product, product => product.productPurchaseHistory, { nullable: false})
     product: Product;
 
     @Column({type: "float", nullable: false})
     price!: number;
 
-    @Column({type: "date", nullable: false})
-    date!: string;
+    @Column({ nullable: false})
+    date!: Date;
 
     @CreateDateColumn()
     createdAt!: Date;

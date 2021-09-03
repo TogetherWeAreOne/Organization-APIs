@@ -1,15 +1,21 @@
 import {getRepository, Repository} from "typeorm";
-import {User} from "../models/user.models";
+import {User, UserProps} from "../models/user.models";
 import {Message, MessageProps} from "../models/message.models";
 import {DiscussionMessage, DiscussionMessageProps} from "../models/discussionMessage.models";
+import {DiscussionUser, DiscussionUserProps} from "../models/discussionUser.models";
+import {DiscussionUserParticipant, DiscussionUserParticipantProps} from "../models/discussionUserParticpant.models";
 
 export class MessageManagerController {
 
     private static instance: MessageManagerController;
     private messageRepository: Repository<Message>;
+    private discussionRepository: Repository<DiscussionUser>;
+    private discussionParticipantRepository: Repository<DiscussionUserParticipant>;
 
     private constructor() {
         this.messageRepository = getRepository(Message);
+        this.discussionRepository = getRepository(DiscussionUser);
+        this.discussionParticipantRepository = getRepository(DiscussionUserParticipant);
     }
 
     public static async getInstance(): Promise<MessageManagerController> {
@@ -27,6 +33,43 @@ export class MessageManagerController {
 
         return message;
     }
+
+    public async createDiscussion(props: DiscussionUserProps): Promise<DiscussionUser> {
+        const discussion = this.discussionRepository.create({
+            ...props
+        });
+        await this.discussionRepository.save(discussion);
+
+        return discussion;
+    }
+
+    public async createDiscussionParticipant(props: DiscussionUserParticipantProps): Promise<DiscussionUserParticipant> {
+        const discussionParticipant = this.discussionParticipantRepository.create({
+            ...props
+        });
+        await this.discussionParticipantRepository.save(discussionParticipant);
+
+        return discussionParticipant;
+    }
+
+    public async getDiscussionParticipantByUser(props : UserProps): Promise<DiscussionUserParticipant[]>{
+        return this.discussionParticipantRepository.find({
+            where: {user : props},relations: ["user", "discussion"]
+        });
+    }
+
+    public async getDiscussionParticipantByDiscussion(props : DiscussionUser): Promise<DiscussionUserParticipant[]>{
+        return this.discussionParticipantRepository.find({ where: {discussion : props},relations: ["user", "discussion"]});
+    }
+
+    public async getAllMessageByDiscussion(props : DiscussionUser): Promise<Message[]>{
+        return this.messageRepository.find({
+            discussion : props
+        });
+    }
+
+
+
 
     public async updateMessage(id: string, props: MessageProps) {
         const result = await this.messageRepository.update(id, props);

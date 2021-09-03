@@ -10,20 +10,46 @@ import {UserManagerController} from "../controllers/userManager.controller";
 import {AuctionSaleWinHistoryManagerController} from "../controllers/auctionSaleWinHistoryManager.controller";
 
 const auctionSaleManagerRouter = express.Router();
+var moment = require('moment');
+const multer = require('multer');
 
-auctionSaleManagerRouter.post("/create", ensureLoggedIn, async function (req, res){
+const storage = multer.diskStorage({
+    destination : (req, file, callback) => {
+        callback(null, 'images_uploads')
+    },
+    filename : (req, file, callback) => {
+        callback(null, `${moment().clone().format('YYYY_MM_DD_HH_mm_SS')}_auction_image_${file.originalname}`)
+    }
+})
+
+var upload = multer({ storage : storage});
+
+auctionSaleManagerRouter.post("/create", ensureLoggedIn, upload.array('imagesAuction'), async function (req, res){
+
+    const files = req.files;
+    console.log(req.body);
     const auctionSaleManagerController = await AuctionSaleManagerController.getInstance();
     const auctionSaleCategoryManagerController = await AuctionSaleCategoryManagerController.getInstance();
-    const auctionSaleCategory = await auctionSaleCategoryManagerController.getAuctionSaleCategoryByName(req.body.category)
+    const auctionSaleCategory = await auctionSaleCategoryManagerController.getAuctionSaleCategoryByName(JSON.parse(req.body.auctionSale).category)
     try {
         const auctionSale = await  auctionSaleManagerController.createAuctionSales({
-            ...req.body,
+            ...JSON.parse(req.body.auctionSale),
             creator : (req.user as User),
             category: auctionSaleCategory,
+            actualPrice : JSON.parse(req.body.auctionSale).startPrice,
             state: "ONGOING",
             selled : false,
             sended : false,
+            owner : null
         });
+
+        if( files ){
+            for (let i = 0 ; i < files.length ; i++){
+                const auctionImage = await auctionSaleManagerController.saveImage({auctionSale : auctionSale, url : files[i].filename});
+                console.log(files[i].filename);
+            }
+        }
+
         res.status(201).json( auctionSale );
     } catch (err){
         res.status(400).send(err);
@@ -40,6 +66,16 @@ auctionSaleManagerRouter.get("/:auctionSaleId/get", ensureLoggedIn, async functi
     try {
         const auctionSale = await auctionSaleManagerController.getAuctionSalesById( auctionSaleId );
         res.status(201).json( auctionSale );
+    } catch ( err ){
+        res.status(400).send( err );
+    }
+});
+
+auctionSaleManagerRouter.get("/getAll", ensureLoggedIn, async function (req, res){
+    const auctionSaleManagerController = await AuctionSaleManagerController.getInstance();
+    try {
+        const auctionSales = await auctionSaleManagerController.getAllAuctionSales( );
+        res.status(201).json( auctionSales );
     } catch ( err ){
         res.status(400).send( err );
     }

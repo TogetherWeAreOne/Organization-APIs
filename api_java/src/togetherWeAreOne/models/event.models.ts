@@ -21,11 +21,13 @@ export interface EventProps {
     image: string;
     address: string;
     zip: string;
-    country: string;
-    startDate: string;
-    endDate: string;
+    city: string;
+    startDate: Date;
+    endDate: Date;
     eventType: string;
     creator : User;
+    longitude: number;
+    latitude: number;
 }
 
 enum EventType {
@@ -60,13 +62,19 @@ export class Event implements EventProps {
     zip!: string;
 
     @Column({type: "varchar", nullable: true})
-    country!: string;
+    city!: string;
 
-    @Column({type: "varchar", nullable: false})
-    startDate!: string;
+    @Column({ nullable: false})
+    startDate!: Date;
 
-    @Column({type: "varchar", nullable: false})
-    endDate!: string;
+    @Column({ nullable: false})
+    endDate!: Date;
+
+    @Column({type: "float", nullable: false})
+    longitude!: number;
+
+    @Column({type: "float", nullable: false})
+    latitude!: number;
 
     @Column({type: "enum", enum: EventType, nullable: false})
     eventType!: string;

@@ -36,7 +36,7 @@ export class ProductProposalManagerController {
     }
 
     public async getProductProposalByUserAndByProduct(user: User, product: Product ): Promise<ProductProposal> {
-        return this.productProposalRepository.findOneOrFail({user: user, product: product}, {relations : ["user","product"]});
+        return this.productProposalRepository.findOne({user: user, product: product}, {relations : ["user","product"]});
         /*return this.projectRepository.createQueryBuilder("project")
             .leftJoinAndSelect("project.user", "projectUser")
             .where("project.id = :id", {id: id})

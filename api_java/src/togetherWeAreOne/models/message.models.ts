@@ -9,12 +9,14 @@ import {
 } from "typeorm";
 import {User, UserProps} from "./user.models";
 import "reflect-metadata";
+import {DiscussionUser} from "./discussionUser.models";
 
 export interface MessageProps {
     content: string;
     readed: boolean;
     sender: User;
     receiver: User;
+    discussion : DiscussionUser;
 }
 
 @Entity()
@@ -27,6 +29,9 @@ export class Message implements MessageProps {
 
     @Column({type: "boolean",nullable: false})
     readed!: boolean;
+
+    @ManyToOne(() => DiscussionUser, discussion => discussion.messages, {onDelete: 'CASCADE', nullable: false})
+    discussion: DiscussionUser;
 
     @ManyToOne(() => User, user => user.messageSended, {onDelete: 'CASCADE', nullable: false})
     sender: User;

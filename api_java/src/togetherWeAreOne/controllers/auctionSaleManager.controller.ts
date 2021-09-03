@@ -5,18 +5,20 @@ import {Product} from "../models/product.models";
 import {AuctionSale, AuctionSaleProps} from "../models/auctionSale.models";
 import {AuctionSaleProposal} from "../models/auctionSaleProposal.models";
 import {AuctionSaleCategory} from "../models/auctionSaleCategory.models";
+import {ProductImage, ProductImageProps} from "../models/productImage.models";
+import {AuctionSaleImage, AuctionSaleImageProps} from "../models/auctionSaleImage.models";
 
 export class AuctionSaleManagerController {
 
     private static instance: AuctionSaleManagerController;
     private userRepository: Repository<User>;
     private auctionSalesRepository: Repository<AuctionSale>;
-    private productRepository: Repository<Product>;
+    private auctionSalesImageRepository: Repository<AuctionSaleImage>;
 
     private constructor() {
         this.userRepository = getRepository(User);
         this.auctionSalesRepository = getRepository(AuctionSale);
-        this.productRepository = getRepository(Product);
+        this.auctionSalesImageRepository = getRepository(AuctionSaleImage);
     }
 
     public static async getInstance(): Promise<AuctionSaleManagerController> {
@@ -33,6 +35,15 @@ export class AuctionSaleManagerController {
         await this.auctionSalesRepository.save(product);
 
         return product;
+    }
+
+    public async saveImage(props: AuctionSaleImageProps): Promise<AuctionSaleImage> {
+        const auctionSaleImage = this.auctionSalesImageRepository.create({
+            ...props
+        });
+        await this.auctionSalesImageRepository.save(auctionSaleImage);
+
+        return auctionSaleImage;
     }
 
     public async updateAuctionSales(id: string, props: AuctionSaleProps) {
@@ -54,6 +65,10 @@ export class AuctionSaleManagerController {
 
     public async getAllAuctionSalesByUser(user : User): Promise<AuctionSale[]> {
         return this.auctionSalesRepository.find({creator:user});
+    }
+
+    public async getAllAuctionSales(): Promise<AuctionSale[]> {
+        return this.auctionSalesRepository.find( {relations: ["category", "creator"]});
     }
 
     public async deleteAuctionSalesById(id: string) {

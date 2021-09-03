@@ -1,11 +1,9 @@
 import express from "express";
 import {ensureLoggedIn} from "../middlewares/auth.middleware";
 import {EventManagerController} from "../controllers/eventManager.controller";
-import {EventParticipantManagerController} from "../controllers/eventParticipantManager.controller";
 import {User} from "../models/user.models";
 import {DiscussionManagerController} from "../controllers/discussionManager.controller";
 import {isEventCreator} from "../middlewares/role.middleware";
-import {DiscussionMessage} from "../models/discussionMessage.models";
 import {DiscussionMessageManagerController} from "../controllers/discussionMessageManager.controller";
 import {DiscussionProps} from "../models/discussion.models";
 

@@ -11,7 +11,8 @@ import {User} from "./user.models";
 import "reflect-metadata";
 import {ProductProposal} from "./productProposal.models";
 import {ProductCategory} from "./productCategory.models";
-import {ProductPurchaseHistoryModels} from "./productPurchaseHistory.models";
+import {ProductPurchaseHistory} from "./productPurchaseHistory.models";
+import {ProductImage} from "./productImage.models";
 
 export interface ProductProps {
     name: string;
@@ -72,8 +73,11 @@ export class Product implements ProductProps {
     @OneToMany(() => ProductProposal, productProposals => productProposals.product)
     productProposals: ProductProposal[];
 
-    @OneToMany(() => ProductPurchaseHistoryModels, productPurchaseHistory => productPurchaseHistory.product)
-    productPurchaseHistory: ProductPurchaseHistoryModels[];
+    @OneToMany(() => ProductPurchaseHistory, productPurchaseHistory => productPurchaseHistory.product)
+    productPurchaseHistory: ProductPurchaseHistory[];
+
+    @OneToMany(() => ProductImage, productImage => productImage.product)
+    images: ProductImage[];
 
     @ManyToOne(() => User, user => user.product, {onDelete: 'CASCADE', nullable: false})
     creator: User;

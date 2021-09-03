@@ -23,6 +23,7 @@ export class AuthController {
     }
 
     public async subscribe(props: UserProps): Promise<User> {
+        console.log(props);
         const passwordHashed = await hash(props.password, 5);
         const user = this.userRepository.create({
             ...props,

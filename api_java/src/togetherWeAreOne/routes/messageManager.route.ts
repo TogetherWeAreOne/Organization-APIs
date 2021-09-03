@@ -1,10 +1,13 @@
 import express from "express";
 import {ensureLoggedIn} from "../middlewares/auth.middleware";
 import {ProductManagerController} from "../controllers/productManager.controller";
-import {User} from "../models/user.models";
+import {User, UserProps} from "../models/user.models";
 import {MessageManagerController} from "../controllers/messageManager.controller";
 import {UserManagerController} from "../controllers/userManager.controller";
+import {DiscussionUserParticipant} from "../models/discussionUserParticpant.models";
+import {DiscussionUser} from "../models/discussionUser.models";
 
+var moment = require('moment');
 const messageManagerRouter = express.Router();
 
 messageManagerRouter.post("/send/:receiverId", ensureLoggedIn, async function (req, res){
@@ -17,12 +20,54 @@ messageManagerRouter.post("/send/:receiverId", ensureLoggedIn, async function (r
         return;
     }
     try {
-        const message = await  messageManagerController.createMessage({...req.body, sender : (req.user as User), receiver : receiver});
-        res.status(201).json( message );
+        const senderDiscussion = await messageManagerController.getDiscussionParticipantByUser((req.user as User));
+        let discussionExist = await isDiscussionAlreadyExist(senderDiscussion, receiver);
+        console.log(":::::::::");
+        console.log(discussionExist);
+        if (discussionExist === undefined){
+            discussionExist = await messageManagerController.createDiscussion({ lastMessageDate : null});
+            const addSender = await messageManagerController.createDiscussionParticipant({
+                user : (req.user as User),
+                discussion : discussionExist
+            })
+            const addReceiver = await messageManagerController.createDiscussionParticipant({
+                user : receiver,
+                discussion : discussionExist
+            })
+        }
+        const message = await messageManagerController.createMessage({
+            content : req.body.content,
+            readed : false,
+            sender : (req.user as User),
+            receiver : receiver,
+            discussion : discussionExist
+        })
+        res.status(200).send(message);
+
     } catch (err){
         res.status(400).send(err);
     }
 });
+
+async function isDiscussionAlreadyExist(discussions : DiscussionUserParticipant[], receiver : User) : Promise<DiscussionUser> {
+    const messageManagerController = await MessageManagerController.getInstance();
+    for (let i = 0 ; i < discussions.length ; i++){
+        const discussionParticipants = await  messageManagerController.getDiscussionParticipantByDiscussion(discussions[i].discussion);
+        for ( let j = 0 ; j < discussionParticipants.length; j ++){
+            console.log("///////");
+            console.log(discussionParticipants[j].user);
+            console.log("**************");
+            console.log(receiver);
+            console.log(discussionParticipants[j].user.id === receiver.id);
+            if ( discussionParticipants[j].user.id === receiver.id){
+                console.log("j'ai trouver !!! ");
+                return discussionParticipants[j].discussion
+            }
+        }
+    }
+    console.log("j'ai rien trouvé !!");
+    return undefined;
+}
 
 messageManagerRouter.get("/:messageId/get", ensureLoggedIn, async function (req, res){
     const messageId = req.params.messageId;

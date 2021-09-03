@@ -1,17 +1,17 @@
 import {getRepository, Repository} from "typeorm";
 import {User} from "../models/user.models";
 import {AuctionSaleWinHistoryModels, AuctionSaleWinHistoryProps} from "../models/auctionSaleWinHistory.models";
-import {ProductPurchaseHistoryModels, ProductPurchaseHistoryProps} from "../models/productPurchaseHistory.models";
+import {ProductPurchaseHistory, ProductPurchaseHistoryProps} from "../models/productPurchaseHistory.models";
 import {Product} from "../models/product.models";
 
 export class ProductPurchaseHistoryManagerController {
 
     private static instance: ProductPurchaseHistoryManagerController;
-    private productPurchaseHistoryRepository: Repository<ProductPurchaseHistoryModels>;
+    private productPurchaseHistoryRepository: Repository<ProductPurchaseHistory>;
 
 
     private constructor() {
-        this.productPurchaseHistoryRepository = getRepository(ProductPurchaseHistoryModels);
+        this.productPurchaseHistoryRepository = getRepository(ProductPurchaseHistory);
     }
 
     public static async getInstance(): Promise<ProductPurchaseHistoryManagerController> {
@@ -21,7 +21,7 @@ export class ProductPurchaseHistoryManagerController {
         return ProductPurchaseHistoryManagerController.instance;
     }
 
-    public async saveProductPurchase(props: ProductPurchaseHistoryProps): Promise<ProductPurchaseHistoryModels> {
+    public async saveProductPurchase(props: ProductPurchaseHistoryProps): Promise<ProductPurchaseHistory> {
         const productPurchase = this.productPurchaseHistoryRepository.create({
             ...props
         });
@@ -30,7 +30,7 @@ export class ProductPurchaseHistoryManagerController {
         return productPurchase;
     }
 
-    public async getProductPurchaseHistoryByUser( user: User ): Promise<ProductPurchaseHistoryModels[]> {
+    public async getProductPurchaseHistoryByUser( user: User ): Promise<ProductPurchaseHistory[]> {
         return this.productPurchaseHistoryRepository.find({ user: user });
         /*return this.projectRepository.createQueryBuilder("project")
             .leftJoinAndSelect("project.user", "projectUser")
@@ -38,7 +38,7 @@ export class ProductPurchaseHistoryManagerController {
             .getOne();*/
     }
 
-    public async getProductPurchaseHistoryByProduct( product: Product ): Promise<ProductPurchaseHistoryModels[]> {
+    public async getProductPurchaseHistoryByProduct( product: Product ): Promise<ProductPurchaseHistory[]> {
         return this.productPurchaseHistoryRepository.find({ product: product });
         /*return this.projectRepository.createQueryBuilder("project")
             .leftJoinAndSelect("project.user", "projectUser")

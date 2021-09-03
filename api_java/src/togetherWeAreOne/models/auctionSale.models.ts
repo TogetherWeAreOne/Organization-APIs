@@ -12,6 +12,8 @@ import {User} from "./user.models";
 import {AuctionSaleProposal} from "./auctionSaleProposal.models";
 import {AuctionSaleCategory} from "./auctionSaleCategory.models";
 import {AuctionSaleWinHistoryModels} from "./auctionSaleWinHistory.models";
+import {ProductImage} from "./productImage.models";
+import {AuctionSaleImage} from "./auctionSaleImage.models";
 
 export interface AuctionSaleProps {
     name: string;
@@ -73,6 +75,9 @@ export class AuctionSale implements AuctionSaleProps {
 
     @OneToMany(() => AuctionSaleWinHistoryModels, auctionSaleWinHistory => auctionSaleWinHistory.auctionSale)
     auctionSaleWinHistory: AuctionSaleWinHistoryModels[];
+
+    @OneToMany(() => AuctionSaleImage, auctionSaleImage => auctionSaleImage.auctionSale)
+    images: AuctionSaleImage[];
 
     @ManyToOne(() => User, user => user.auctionSales, {onDelete: 'CASCADE', nullable: false})
     creator: User;

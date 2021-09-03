@@ -17,8 +17,9 @@ import {AuctionSaleProposal} from "./auctionSaleProposal.models";
 import {ProductProposal} from "./productProposal.models";
 import {UserBlockedUser} from "./userBlockUser.models";
 import {AuctionSaleWinHistoryModels} from "./auctionSaleWinHistory.models";
-import {ProductPurchaseHistoryModels} from "./productPurchaseHistory.models";
+import {ProductPurchaseHistory} from "./productPurchaseHistory.models";
 import {DiscussionMessage} from "./discussionMessage.models";
+
 
 export interface UserProps {
     email: string;
@@ -31,9 +32,11 @@ export interface UserProps {
     birthdate: string;
     address: string;
     zip: string;
-    country: string;
+    city: string;
     phone: string;
     certified: boolean;
+    longitude: number;
+    latitude: number;
 }
 
 enum RoleEnum {
@@ -79,13 +82,19 @@ export class User implements UserProps {
     zip!: string;
 
     @Column({type: "varchar", nullable: true})
-    country!: string;
+    city!: string;
 
     @Column({type: "varchar", nullable: true})
     phone!: string;
 
     @Column({type: "boolean", nullable: true})
     certified!: boolean;
+
+    @Column({type: "float", nullable: false})
+    longitude!: number;
+
+    @Column({type: "float", nullable: false})
+    latitude!: number;
 
     @OneToMany(() => Event, event => event.creator)
     event: Event[];
@@ -126,8 +135,8 @@ export class User implements UserProps {
     @OneToMany(() => AuctionSaleWinHistoryModels, auctionSaleWinHistory => auctionSaleWinHistory.user)
     auctionSaleWinHistory: AuctionSaleWinHistoryModels[];
 
-    @OneToMany(() => ProductPurchaseHistoryModels, productPurchaseHistory => productPurchaseHistory.user)
-    productPurchaseHistory: ProductPurchaseHistoryModels[];
+    @OneToMany(() => ProductPurchaseHistory, productPurchaseHistory => productPurchaseHistory.user)
+    productPurchaseHistory: ProductPurchaseHistory[];
 
     @CreateDateColumn()
     createdAt!: Date;

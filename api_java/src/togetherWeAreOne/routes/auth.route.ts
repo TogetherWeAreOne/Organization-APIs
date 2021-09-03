@@ -7,10 +7,12 @@ const authRouter = express.Router();
 
 authRouter.post("/signin", ensureLoggedOut, async function (req, res) {
     const authController = await AuthController.getInstance();
+    console.log(req.body);
     try {
         const user = await authController.subscribe({...req.body, certified : false});
         res.status(201).json(user);
     } catch (err) {
+        console.log(err);
         res.status(409).send(err).end();
     }
 });

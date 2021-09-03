@@ -8,6 +8,7 @@ import {UserManagerController} from "../controllers/userManager.controller";
 import {ProductPurchaseHistoryManagerController} from "../controllers/productPurchaseHistoryManager.controller";
 import {isProductProposalAlreadyExist} from "../middlewares/productProposalControl.middleware";
 
+var moment = require('moment');
 const productProposalManagerRouter = express.Router();
 
 productProposalManagerRouter.post("/proposal/:productId/create", ensureLoggedIn,isProductProposalAlreadyExist(), async function (req, res){
@@ -15,7 +16,7 @@ productProposalManagerRouter.post("/proposal/:productId/create", ensureLoggedIn,
     const productManagerController = await ProductManagerController.getInstance();
     const productProposalManagerController = await ProductProposalManagerController.getInstance();
     const product = await productManagerController.getProductById(productId);
-    console.log(product)
+    console.log(product);
     if ( product === undefined){
         res.status(400).json("Le produit n'existe pas ! ").end();
         return;
@@ -96,11 +97,17 @@ productProposalManagerRouter.put("/proposal/:productId/:userId/confirm", ensureL
             ...productProposal,
             state : "ACCEPTED"
         });
+        product.quantity = product.quantity -1 ;
+        if( product.quantity === 0  ) {
+            product.state = 'SOLD';
+            product.selled = true;
+        }
+        const productUpdate = await productManagerController.updateProduct(productId, product);
         const productPurchaseHistory = productPurchaseHistoryManagerController.saveProductPurchase({
             user : user,
             product : product,
             price : productProposal.price,
-            date : new Date().toDateString()
+            date : moment().clone().format('YYYY-MM-DD HH:mm:SS')
         })
         res.status(201).json( productProposal );
     } catch ( err ){

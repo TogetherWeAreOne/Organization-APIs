@@ -3,10 +3,14 @@ import {ensureLoggedIn} from "../middlewares/auth.middleware";
 import {User} from "../models/user.models";
 import {AuctionSaleProposalManagerController} from "../controllers/auctionSaleProposalManager.controller";
 import {AuctionSaleManagerController} from "../controllers/auctionSaleManager.controller";
+import {
+    isAuctionSaleProposalAlreadyExist,
+    isAuctionSaleProposalSuperiorThanActualPrice
+} from "../middlewares/auctionSaleProposalControl.middleware";
 
 const auctionSaleProposalManagerRouter = express.Router();
 
-auctionSaleProposalManagerRouter.post("/proposal/:auctionSaleId/create", ensureLoggedIn, async function (req, res){
+auctionSaleProposalManagerRouter.post("/proposal/:auctionSaleId/create", ensureLoggedIn, isAuctionSaleProposalAlreadyExist(),isAuctionSaleProposalSuperiorThanActualPrice(), async function (req, res){
     const auctionSaleId = req.params.auctionSaleId;
     const auctionSaleManagerController = await AuctionSaleManagerController.getInstance();
     const auctionSaleProposalManagerController = await AuctionSaleProposalManagerController.getInstance();
@@ -17,17 +21,20 @@ auctionSaleProposalManagerRouter.post("/proposal/:auctionSaleId/create", ensureL
         return;
     }
     try {
+        if(auctionSale.owner !== null) {
+            const previousProposal = await auctionSaleProposalManagerController.getAuctionSalesProposalByUserAndByAuctionSale(auctionSale.owner, auctionSale);
+            const previousProposalUpdate = await auctionSaleProposalManagerController.updateAuctionSaleProposal({
+                ...previousProposal,
+                state: "REFUSED"
+            })
+        }
         const auctionSaleProposal = await auctionSaleProposalManagerController.makeAuctionSaleProposal({
             ...req.body,
             user : (req.user as User),
             auctionSale: auctionSale,
             state:"PENDING"
         });
-        const previousProposal = await auctionSaleProposalManagerController.getAuctionSalesProposalByUserAndByAuctionSale( auctionSale.owner, auctionSale);
-        const previousProposalUpdate = await auctionSaleProposalManagerController.updateAuctionSaleProposal( {
-            ...previousProposal,
-            state: "REFUSED"
-        })
+
         const auctionSaleUpdated = await auctionSaleManagerController.updateAuctionSales(auctionSale.id, {
             ...auctionSale,
             owner: (req.user as User),
@@ -82,8 +89,6 @@ auctionSaleProposalManagerRouter.get("/proposal/:auctionSaleId/getAllProposal", 
         res.status(400).send( err );
     }
 });
-
-// delete utile ?
 
 auctionSaleProposalManagerRouter.delete("/proposal/:auctionSaleProposalId/delete", ensureLoggedIn, async function(req, res){
     const auctionSaleProposalId = req.params.auctionSaleProposalId;
