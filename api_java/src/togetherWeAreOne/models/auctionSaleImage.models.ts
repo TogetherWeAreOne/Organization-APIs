@@ -8,7 +8,6 @@ import {
     UpdateDateColumn
 } from "typeorm";
 import "reflect-metadata";
-import {Product} from "./product.models";
 import {AuctionSale} from "./auctionSale.models";
 
 export interface AuctionSaleImageProps {

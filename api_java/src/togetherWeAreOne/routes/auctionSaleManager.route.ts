@@ -8,6 +8,7 @@ import {AuctionSaleProposalManagerController} from "../controllers/auctionSalePr
 import {auctionSaleProposalManagerRouter} from "./auctionSaleProposalManager.route";
 import {UserManagerController} from "../controllers/userManager.controller";
 import {AuctionSaleWinHistoryManagerController} from "../controllers/auctionSaleWinHistoryManager.controller";
+import {productManagerRouter} from "./productManager.route";
 
 const auctionSaleManagerRouter = express.Router();
 var moment = require('moment');
@@ -53,6 +54,28 @@ auctionSaleManagerRouter.post("/create", ensureLoggedIn, upload.array('imagesAuc
         res.status(201).json( auctionSale );
     } catch (err){
         res.status(400).send(err);
+    }
+});
+
+auctionSaleManagerRouter.get("/:auctionId/getImages", ensureLoggedIn, async function (req, res){
+    const auctionId = req.params.auctionId;
+    const auctionSaleManagerController = await AuctionSaleManagerController.getInstance();
+    if ( auctionId === undefined ) {
+        res.status(400).json("le product id n'est pas renseigné !").end();
+        return;
+    }
+    try {
+        console.log("////////////////////");
+        const auction = await auctionSaleManagerController.getAuctionSalesById(auctionId)
+        console.log("******************");
+        console.log(auction);
+        const auctionImages = await auctionSaleManagerController.getImageByAuction( auction );
+        console.log("-----------------------");
+        console.log(auctionImages)
+        res.status(201).json( auctionImages );
+    } catch ( err ){
+        console.log(err);
+        res.status(400).send( err );
     }
 });
 

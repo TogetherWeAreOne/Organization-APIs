@@ -59,12 +59,17 @@ export class AuctionSaleManagerController {
             .getOne();*/
     }
 
+    public async getImageByAuction(auction: AuctionSale): Promise<AuctionSaleImage[]> {
+        console.log("je suis rentré");
+        return this.auctionSalesImageRepository.find( {where : { auctionSale : auction }});
+    }
+
     public async getAllAuctionSalesByAuctionSaleCategory(auctionSaleCategory : AuctionSaleCategory): Promise<AuctionSale[]> {
         return this.auctionSalesRepository.find({category : auctionSaleCategory });
     }
 
     public async getAllAuctionSalesByUser(user : User): Promise<AuctionSale[]> {
-        return this.auctionSalesRepository.find({creator:user});
+        return this.auctionSalesRepository.find({where : {creator:user}, relations: ["category", "creator"]});
     }
 
     public async getAllAuctionSales(): Promise<AuctionSale[]> {

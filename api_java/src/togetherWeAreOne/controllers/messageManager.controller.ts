@@ -1,4 +1,4 @@
-import {getRepository, Repository} from "typeorm";
+import {getRepository, Not, Repository} from "typeorm";
 import {User, UserProps} from "../models/user.models";
 import {Message, MessageProps} from "../models/message.models";
 import {DiscussionMessage, DiscussionMessageProps} from "../models/discussionMessage.models";
@@ -52,6 +52,10 @@ export class MessageManagerController {
         return discussionParticipant;
     }
 
+    public async getDiscussiontById(discussionId : string): Promise<DiscussionUser>{
+        return this.discussionRepository.findOne(discussionId);
+    }
+
     public async getDiscussionParticipantByUser(props : UserProps): Promise<DiscussionUserParticipant[]>{
         return this.discussionParticipantRepository.find({
             where: {user : props},relations: ["user", "discussion"]
@@ -61,22 +65,25 @@ export class MessageManagerController {
     public async getDiscussionParticipantByDiscussion(props : DiscussionUser): Promise<DiscussionUserParticipant[]>{
         return this.discussionParticipantRepository.find({ where: {discussion : props},relations: ["user", "discussion"]});
     }
+    public async getInterlocutorByDiscussion(props : DiscussionUser, user : User): Promise<DiscussionUserParticipant>{
+        return this.discussionParticipantRepository.findOne({ where: {discussion : props, user : Not(user.id)},relations: ["user", "discussion"]});
+    }
 
     public async getAllMessageByDiscussion(props : DiscussionUser): Promise<Message[]>{
-        return this.messageRepository.find({
-            discussion : props
+        return this.messageRepository.find({ where : {
+            discussion : props}, relations: ["sender"]
         });
     }
 
-
-
+    public async updateDiscussion(id: string, props: DiscussionUser) {
+        const result = await this.discussionRepository.update(id, props);
+        return !(result.affected === undefined || result.affected <= 0);
+    }
 
     public async updateMessage(id: string, props: MessageProps) {
         const result = await this.messageRepository.update(id, props);
         return !(result.affected === undefined || result.affected <= 0);
     }
-
-
 
     public async getMessageById(id: string): Promise<Message> {
         return this.messageRepository.findOneOrFail(id);

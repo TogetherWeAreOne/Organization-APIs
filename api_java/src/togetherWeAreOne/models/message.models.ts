@@ -14,6 +14,7 @@ import {DiscussionUser} from "./discussionUser.models";
 export interface MessageProps {
     content: string;
     readed: boolean;
+    sendedDate: Date;
     sender: User;
     receiver: User;
     discussion : DiscussionUser;
@@ -29,6 +30,9 @@ export class Message implements MessageProps {
 
     @Column({type: "boolean",nullable: false})
     readed!: boolean;
+
+    @Column({ nullable: false})
+    sendedDate!: Date;
 
     @ManyToOne(() => DiscussionUser, discussion => discussion.messages, {onDelete: 'CASCADE', nullable: false})
     discussion: DiscussionUser;

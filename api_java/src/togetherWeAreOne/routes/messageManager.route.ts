@@ -22,10 +22,8 @@ messageManagerRouter.post("/send/:receiverId", ensureLoggedIn, async function (r
     try {
         const senderDiscussion = await messageManagerController.getDiscussionParticipantByUser((req.user as User));
         let discussionExist = await isDiscussionAlreadyExist(senderDiscussion, receiver);
-        console.log(":::::::::");
-        console.log(discussionExist);
         if (discussionExist === undefined){
-            discussionExist = await messageManagerController.createDiscussion({ lastMessageDate : null});
+            discussionExist = await messageManagerController.createDiscussion({ lastMessageDate : moment().clone().format('YYYY-MM-DD HH:mm:SS')});
             const addSender = await messageManagerController.createDiscussionParticipant({
                 user : (req.user as User),
                 discussion : discussionExist
@@ -35,13 +33,17 @@ messageManagerRouter.post("/send/:receiverId", ensureLoggedIn, async function (r
                 discussion : discussionExist
             })
         }
+        console.log(moment().clone().format('YYYY-MM-DD HH:mm:SS'))
         const message = await messageManagerController.createMessage({
             content : req.body.content,
             readed : false,
             sender : (req.user as User),
             receiver : receiver,
-            discussion : discussionExist
+            discussion : discussionExist,
+            sendedDate : moment().clone().format('YYYY-MM-DD HH:mm:SS')
         })
+        discussionExist.lastMessageDate = moment().clone().format('YYYY-MM-DD HH:mm:SS');
+        const updatedDiscussion = await messageManagerController.updateDiscussion(discussionExist.id , discussionExist)
         res.status(200).send(message);
 
     } catch (err){
@@ -89,6 +91,51 @@ messageManagerRouter.get("/getAllMyMessage", ensureLoggedIn, async function (req
     try {
         const message = await messageManagerController.getAllMessageByUser( (req.user as User)) ;
         res.status(201).json( message );
+    } catch ( err ){
+        res.status(400).send( err );
+    }
+});
+
+messageManagerRouter.get("/:discussionId/getAllMessage", ensureLoggedIn, async function (req, res){
+    const discussionId = req.params.discussionId;
+    const messageManagerController = await MessageManagerController.getInstance();
+    const discussion = await messageManagerController.getDiscussiontById( discussionId ) ;
+    try {
+        const message = await messageManagerController.getAllMessageByDiscussion( discussion ) ;
+        res.status(201).json( message );
+    } catch ( err ){
+        res.status(400).send( err );
+    }
+});
+
+messageManagerRouter.get("/:discussionId/getInterlocutor", ensureLoggedIn, async function (req, res){
+    const discussionId = req.params.discussionId;
+    const messageManagerController = await MessageManagerController.getInstance();
+    const discussion = await messageManagerController.getDiscussiontById( discussionId ) ;
+    try {
+        const message = await messageManagerController.getInterlocutorByDiscussion( discussion, (req.user as User) ) ;
+        res.status(201).json( message );
+    } catch ( err ){
+        res.status(400).send( err );
+    }
+});
+
+messageManagerRouter.get("/getAllMyDiscussion", ensureLoggedIn, async function (req, res){
+    const messageManagerController = await MessageManagerController.getInstance();
+    try {
+        const discussion = await messageManagerController.getDiscussionParticipantByUser( (req.user as User)) ;
+        res.status(201).json( discussion );
+    } catch ( err ){
+        res.status(400).send( err );
+    }
+});
+
+messageManagerRouter.get("/:discussionId/getDiscussion", ensureLoggedIn, async function (req, res){
+    const discussionId = req.params.discussionId;
+    const messageManagerController = await MessageManagerController.getInstance();
+    try {
+        const discussion = await messageManagerController.getDiscussiontById( discussionId ) ;
+        res.status(201).json( discussion );
     } catch ( err ){
         res.status(400).send( err );
     }
