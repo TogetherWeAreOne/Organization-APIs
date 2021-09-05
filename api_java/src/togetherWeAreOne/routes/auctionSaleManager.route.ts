@@ -9,6 +9,10 @@ import {auctionSaleProposalManagerRouter} from "./auctionSaleProposalManager.rou
 import {UserManagerController} from "../controllers/userManager.controller";
 import {AuctionSaleWinHistoryManagerController} from "../controllers/auctionSaleWinHistoryManager.controller";
 import {productManagerRouter} from "./productManager.route";
+import {EventManagerController} from "../controllers/eventManager.controller";
+import {SearchEvent} from "../models/searchEvent.model";
+import {eventManagerRouter} from "./eventManager.route";
+import {SearchAuction} from "../models/searchAuction.models";
 
 const auctionSaleManagerRouter = express.Router();
 var moment = require('moment');
@@ -132,7 +136,7 @@ auctionSaleManagerRouter.put("/:auctionSaleId/update", ensureLoggedIn, async fun
     }
 });
 
-auctionSaleManagerRouter.put("/:auctionSaleId/confirm", ensureLoggedIn, async function (req, res){
+auctionSaleManagerRouter.get("/:auctionSaleId/confirm", ensureLoggedIn, async function (req, res){
     const auctionSaleId = req.params.auctionSaleId;
     const auctionSaleProposalManagerController = await AuctionSaleProposalManagerController.getInstance();
     const auctionSaleManagerController = await AuctionSaleManagerController.getInstance();
@@ -145,11 +149,13 @@ auctionSaleManagerRouter.put("/:auctionSaleId/confirm", ensureLoggedIn, async fu
     }
     try {
         const user = await userManagerController.getUserById(auctionSale.owner.id);
+        console.log(user);
         const auctionSaleProposal = await auctionSaleProposalManagerController.getAuctionSalesProposalByUserAndByAuctionSale(user, auctionSale);
-        const auctionSaleProposalUpdate = await auctionSaleProposalManagerController.updateAuctionSaleProposal({
+        console.log(auctionSaleProposal);
+        /*const auctionSaleProposalUpdate = await auctionSaleProposalManagerController.updateAuctionSaleProposal(auctionSaleProposal.id{
             ...auctionSaleProposal,
             state: "ACCEPTED"
-        });
+        });*/
         const auctionSaleUpdate = await auctionSaleManagerController.updateAuctionSales(auctionSale.id, {
             ...auctionSale,
             selled: true,
@@ -165,6 +171,14 @@ auctionSaleManagerRouter.put("/:auctionSaleId/confirm", ensureLoggedIn, async fu
     } catch ( err ){
         res.status(400).send( err );
     }
+});
+
+auctionSaleManagerRouter.post("/getBySearch", ensureLoggedIn, async function (req, res){
+    const auctionSaleManagerController = await AuctionSaleManagerController.getInstance();
+    console.log( (req.body as SearchAuction));
+
+    const product = await auctionSaleManagerController.getAuctionBySearch({...req.body });
+    res.status(201).json( product );
 });
 
 

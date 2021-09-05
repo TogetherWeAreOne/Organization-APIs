@@ -89,6 +89,7 @@ export class ProductManagerController {
         for(let i = 0; i < search.category.length; i++){
             result = result.concat(
                 await this.productRepository.createQueryBuilder("product")
+                    .leftJoinAndSelect("product.creator", "user")
                     .leftJoinAndSelect("product.category", "productCategory")
                     .where("product.name like :name",{name : search.name})
                     .andWhere("product.price >= :minPrice AND product.price <= :maxPrice", {

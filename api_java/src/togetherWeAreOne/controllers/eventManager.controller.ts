@@ -73,7 +73,7 @@ export class EventManagerController {
                 await this.eventRepository.createQueryBuilder("event")
                     .where("event.title like :title",{title : search.title})
                     .andWhere("event.startDate >= :startDate ", {
-                        startDate : search.startDate !== undefined ? search.startDate : new Date(moment().clone().format('YYYY-MM-DD HH:mm:SS'))})
+                        startDate : search.startDate !== undefined ? search.startDate : new Date()})
                     .andWhere("event.eventType like :eventType", {eventType : search.eventType})
                     .andWhere("event.zip regexp :zip ", {zip : search.zip === '' ? '[0-9]{5}' : search.zip + '[0-9]{3}'})
                     .getMany();

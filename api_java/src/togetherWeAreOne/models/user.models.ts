@@ -43,7 +43,8 @@ enum RoleEnum {
     ADMIN = "ADMIN",
     USER = "USER",
     ORGANISATION = "ORGANISATION",
-    PRO = "PRO"
+    PRO = "PRO",
+    ARTIST = "ARTIST"
 }
 
 @Entity()
