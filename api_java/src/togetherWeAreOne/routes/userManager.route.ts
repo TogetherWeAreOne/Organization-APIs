@@ -33,6 +33,8 @@ userManagerRouter.get('/searchUser/:pseudo', async function (req, res) {
         res.status(201).json(user);
     } catch (err) {
         res.status(409).send(err).end();
+    }
+});
 
 userManagerRouter.get("/getAll", ensureLoggedIn, async function (req, res){
     const userController = await UserManagerController.getInstance();
