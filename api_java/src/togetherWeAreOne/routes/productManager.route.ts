@@ -115,13 +115,17 @@ productManagerRouter.get("/getAllMyProduct", ensureLoggedIn, async function (req
 
 productManagerRouter.put("/:productId/update", ensureLoggedIn, async function (req, res){
     const productId = req.params.productId;
+    console.log(req.body);
+    const productCategoryManagerController = await ProductCategoryManagerController.getInstance();
+    const category = await productCategoryManagerController.getProductCategoryByName(req.body.category);
+    console.log(category);
     const productManagerController = await ProductManagerController.getInstance();
     if ( productId === undefined ) {
         res.status(400).json("le product id n'est pas renseigné !").end();
         return;
     }
     try {
-        const product = await productManagerController.updateProduct(productId, {...req.body});
+        const product = await productManagerController.updateProduct(productId, {...req.body, category : category});
         res.status(201).json( product );
     } catch (err){
         res.status(400).send(err);

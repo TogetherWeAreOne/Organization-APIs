@@ -118,12 +118,14 @@ auctionSaleManagerRouter.get("/getAllMyAuctionSales", ensureLoggedIn, async func
 auctionSaleManagerRouter.put("/:auctionSaleId/update", ensureLoggedIn, async function (req, res){
     const auctionSaleId = req.params.auctionSaleId;
     const auctionSaleManagerController = await AuctionSaleManagerController.getInstance();
+    const auctionSaleCategoryManagerController = await AuctionSaleCategoryManagerController.getInstance();
+    const category = await auctionSaleCategoryManagerController.getAuctionSaleCategoryByName(req.body.category);
     if ( auctionSaleId === undefined ) {
         res.status(400).json("la vente aux enchères n'existe pas !").end();
         return;
     }
     try {
-        const auctionSale = await auctionSaleManagerController.updateAuctionSales(auctionSaleId, {...req.body});
+        const auctionSale = await auctionSaleManagerController.updateAuctionSales(auctionSaleId, {...req.body, category : category});
         res.status(201).json( auctionSale );
     } catch (err){
         res.status(400).send(err);
