@@ -35,6 +35,14 @@ export class UserManagerController {
         return this.userRepository.find();
     }
 
+    public async searchUser(pseudo : string): Promise<User[]> {
+        pseudo = "%" + pseudo + "%";
+        return await this.userRepository.createQueryBuilder("user")
+            .where("user.pseudo like :pseudo",{pseudo : pseudo})
+            .limit(5)
+            .getMany();
+    }
+
     public async deleteUserById(id: string) {
         await this.userRepository.softDelete(id);
     }

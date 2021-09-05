@@ -1,4 +1,4 @@
-import {getRepository, IsNull, Repository} from "typeorm";
+import {getRepository, IsNull, Not, Repository} from "typeorm";
 import {User} from "../models/user.models";
 import {Event, EventProps} from "../models/event.models";
 import {EventParticipant, EventParticipantProps} from "../models/eventParticipant.models";
@@ -39,7 +39,13 @@ export class EventParticipantManagerController {
     }
 
     public async getAllEventParticipantByUser(user: User): Promise<EventParticipant[]> {
-        return this.eventParticipantRepository.find( { where: {user : user, deletedAt: null},relations: ["event"]});
+        return this.eventParticipantRepository.find( { where: {user : user},relations: ["event"]});
+        /*return this.eventParticipantRepository.createQueryBuilder("eventParticipant")
+            .leftJoinAndSelect("eventParticipant.event", "event")
+            .where("eventParticipant.user = :user", {user: user.id})
+            .where("event.deletedAt = :delete", {delete: null})
+            .getMany();
+           */
     }
 
     public async leaveEvent(event: Event, user: User) {

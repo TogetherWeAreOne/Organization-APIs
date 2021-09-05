@@ -58,7 +58,7 @@ export class MessageManagerController {
 
     public async getDiscussionParticipantByUser(props : UserProps): Promise<DiscussionUserParticipant[]>{
         return this.discussionParticipantRepository.find({
-            where: {user : props},relations: ["user", "discussion"]
+            where: {user : props},relations: ["user", "discussion"],
         });
     }
 
@@ -71,7 +71,7 @@ export class MessageManagerController {
 
     public async getAllMessageByDiscussion(props : DiscussionUser): Promise<Message[]>{
         return this.messageRepository.find({ where : {
-            discussion : props}, relations: ["sender"]
+            discussion : props}, relations: ["sender", "receiver"], order: { sendedDate : 'ASC'}
         });
     }
 

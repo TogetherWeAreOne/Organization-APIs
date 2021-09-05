@@ -22,7 +22,7 @@ import {userManagerRouter} from "./userManager.route";
 export function buildWebRoutes() {
     const router = Router();
     configureWeb();
-    router.use(require('cors')({ credentials : true, origin: "http://localhost:4200"}));
+    router.use(require('cors')({ credentials : true, origin: ["http://localhost:4200", "http://localhost:4201"]}));
     router.use("/", require('express-session')({
         secret: process.env.SECRET,
         resave: true,

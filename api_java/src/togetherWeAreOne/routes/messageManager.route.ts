@@ -40,9 +40,9 @@ messageManagerRouter.post("/send/:receiverId", ensureLoggedIn, async function (r
             sender : (req.user as User),
             receiver : receiver,
             discussion : discussionExist,
-            sendedDate : moment().clone().format('YYYY-MM-DD HH:mm:SS')
+            sendedDate : new Date()
         })
-        discussionExist.lastMessageDate = moment().clone().format('YYYY-MM-DD HH:mm:SS');
+        discussionExist.lastMessageDate = new Date();
         const updatedDiscussion = await messageManagerController.updateDiscussion(discussionExist.id , discussionExist)
         res.status(200).send(message);
 

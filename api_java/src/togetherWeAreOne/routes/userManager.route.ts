@@ -22,6 +22,17 @@ userManagerRouter.get('/:userId/getUser', async function (req, res) {
     }
 });
 
+userManagerRouter.get('/searchUser/:pseudo', async function (req, res) {
+    const userController = await UserManagerController.getInstance();
+    const pseudo = req.params.pseudo;
+    try {
+        const user = await userController.searchUser(pseudo);
+        res.status(201).json(user);
+    } catch (err) {
+        res.status(409).send(err).end();
+    }
+});
+
 
 export {
     userManagerRouter

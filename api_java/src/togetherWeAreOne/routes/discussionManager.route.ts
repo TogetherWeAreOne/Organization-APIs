@@ -21,10 +21,10 @@ discussionManagerRouter.post("/:discussionId/send", ensureLoggedIn,isEventCreato
     }
     try {
         const message = await discussionMessageManagerController.createDiscussionMessage({ content : req.body.content,
-                                                                                            user :(req.user as User), discussion: discussion, date :moment().clone().format('YYYY-MM-DD HH:mm:SS') });
+                                                                                            user :(req.user as User), discussion: discussion, date : new Date() });
         console.log( discussion.id );
 
-        const updateDiscussion = await discussionManagerController.updateDiscussion( discussion.id, {...(discussion as DiscussionProps), lastMessageDate : moment().clone().format('YYYY-MM-DD HH:mm:SS')});
+        const updateDiscussion = await discussionManagerController.updateDiscussion( discussion.id, {...(discussion as DiscussionProps), lastMessageDate : new Date()});
         res.status(201).json( message );
     } catch (err){
         res.status(400).send(err);
